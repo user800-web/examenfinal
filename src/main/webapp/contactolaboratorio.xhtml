@@ -1,0 +1,165 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="es-EC" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Contacto</title>
+        <!-- CSS only -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous"/><!-- comment -->
+        <style type="text/css">
+            /*aqui se pone el css de la pagina*/
+            .centrado {
+                text-align: center;
+                vertical-align: middle;
+            }
+        </style>
+        <script src="https://maps.google.com/maps/api/js?sensor=true"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#limpiar').click(function () {
+                    $('.borrarimput').val('');
+                });
+            });
+        </script>
+
+    </h:head>
+    <h:body>
+        <div>
+            <h:form>
+                
+                <p:growl id="messages"/>
+
+                <p:menubar>
+                    <p:menuitem class="negrita" value="AlphaLabs" />
+                    <p:divider layout="vertical"/>
+                    <p:menuitem value="Inicio" icon="pi pi-fw pi-user" outcome="pantallaGeneral"/>
+
+                    <p:menuitem value="Informacion" icon="pi pi-fw pi-calendar" outcome="informacionlaboratorio"/>
+
+                    <p:menuitem value="Promociones" icon="pi pi-fw pi-ticket" outcome="promocioneslaboratorio"/>
+
+                    <p:menuitem value="Contacto" icon="pi pi-fw pi-calendar-plus" outcome="contactolaboratorio"/>                    
+
+                    <p:divider layout="vertical"/>
+
+                    <f:facet name="options">
+                        <h:commandLink value="#{iniciarSesion.xhtml}" action="iniciarSesion.xhtml">                            
+                            <p:button value="Iniciar Sesión" icon="pi pi-user"/>   
+                        </h:commandLink>
+                    </f:facet>
+
+                </p:menubar>
+            </h:form>
+        </div>
+        <div class="card">
+            <h:form>
+                <p:breadCrumb>
+                    <p:menuitem value="Inicio" outcome="pantallaGeneral"/>
+                    <p:menuitem value="Contactos"/>
+                </p:breadCrumb>
+            </h:form>
+        </div>
+        <div class="container my-3 centrado">
+            <br/>
+            <h1 class="display-2 text-center"><strong>Contacto de ALphaLabs</strong></h1>
+            <br/>
+            <div class="row">
+                <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 py-4 bg-white">
+                    <h2>Sugerencias y Preguntas</h2>
+                    <h:form>
+                        <h:messages showDetail="true" showSummary="false"/>
+                        <div class="mb-3">
+                            <div class="ui-inputgroup">
+
+                                <div class="ui-inputgroup-addon"><i class="pi pi-user"></i></div>
+                                <p:inputText value="#{mail.subject}" class="form-control borrarimput" placeholder="Nombre"/>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="ui-inputgroup">
+                                <div class="ui-inputgroup-addon"><i class="pi pi-info"></i></div>
+
+                                <p:inputText id="email" required="true" label="email" size="40"
+                                             requiredMessage="Por favor ingrese su correo"
+                                             validatorMessage="Formato invalido de correo"
+                                             class="form-control borrarimput"
+                                             placeholder="Correo Electronico"
+                                             value="#{mail.to}">
+
+                                    <f:validateRegex
+                                        pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+
+                                </p:inputText>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="ui-inputgroup">
+                                <div class="ui-inputgroup-addon"><i class="pi pi-comment"></i></div>
+
+                                <p:inputTextarea value="#{mail.descr}" class="form-control borrarimput" rows="6" cols="33" placeholder="Descripción"/>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap 2 ">
+                            <h:commandButton value="Enviar" class="btn btn-success" actionListener="#{mail.enviarEmail()}"/>
+                            <br/>
+                            <button id="limpiar" class="btn btn-secondary">Limpiar</button>
+                        </div>
+                    </h:form>
+                </div>
+                <div class="col-sm-12 col-md-8 col-lg-8 col-xl-8 py-4 bg-white">
+                    <h2 class="centrado">Centro de Información</h2>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th class="centrado"><h4>Contacto</h4></th>                            
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="centrado">
+                                    <h6>(593) 1700 700 700</h6>
+                                    <h6>(593 2) 400 7100</h6>
+                                    <br/>
+                                    <h6>Villalengua Oe2-37</h6>
+                                    <h6>y Av. 10 de Agosto</h6>
+                                    <br/>
+                                    <h6>WWW.clinicaAlphaLabs.com</h6>
+                                    <h6>Quevedo - Ecuador</h6>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card">
+                <p:gmap center="-1.0301025296726518, -79.46953319335026" zoom="19" type="HYBRID" style="width:100%;height:400px"/>
+            </div>
+        </div>
+        <br/>
+        <div class="piedepagina">
+            <footer class="footer py-3 bg-black">
+                <div class="container ">
+
+                    <div class=" p-5 row g-2">
+                        <div class="colores col-md-7 col-lg-8">
+                            <p class="text-muted">
+                                <strong>
+                                    @Copyright 2022 Karla and Eduardo
+                                </strong>
+                            </p>
+                        </div>
+                        <div class="text-center col-md-5 col-lg-4 order-md-last">
+                            <img class="img-fluid" src="Imagenes/logoFoot (2).png" alt=""/>
+                        </div>
+                    </div> 
+                </div>
+            </footer>
+        </div>
+    </h:body>
+</html>
+

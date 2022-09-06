@@ -1,0 +1,236 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://java.sun.com/jsf/core">      
+    <h:head>
+        <title>Usuarios</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous"/><!-- comment -->
+
+        <link href="Recursosappweb/css/estilocrudpersona.css" rel="stylesheet" type="text/css"/>
+
+    </h:head>
+    <h:body class="">
+        <div>           
+            <h:form>
+                <p:growl id="messages"/>
+
+                <p:menubar>
+
+                    <p:menuitem value="Inicio" icon="pi pi-fw pi pi-home" outcome="pantallaLaboratorista"/>
+
+                    <p:menuitem value="Usuarios" icon="pi pi-fw pi-user" outcome="crudPersonas"/>
+
+                    <p:menuitem value="Examenes" icon="pi pi-fw pi-file" outcome="crudExamenes"/>       
+
+                    <p:divider layout="vertical"/>
+
+                    <p:submenu label="nombre" icon="pi pi-user">
+                        <p:menuitem value="Perfil" icon="pi pi-user-edit"/>
+                    </p:submenu>
+
+                    <f:facet name="options">                        
+                        <h:commandLink value="" action="iniciarSesion.xhtml">                            
+                            <p:button value="Cerrar Sesión" icon="pi pi-fw pi-sign-out" styleClass="ui-button-info"/>
+                        </h:commandLink>
+
+                    </f:facet>
+                </p:menubar>
+            </h:form>
+        </div>
+        <div class="card">
+            <h:form>
+                <p:breadCrumb>
+                    <p:menuitem value="Inicio" outcome="pantallaLaboratorista"/>
+                    <p:menuitem value="Usuarios"/>
+                </p:breadCrumb>
+            </h:form>
+        </div>
+        <br/>
+
+        <p class="text-center">"Usted puede <strong>Agregar, Buscar, Actualizar y Eliminar</strong> en este apartado a cualquier paciente que requiera"</p>
+
+        <div class="card crud-demo margen">
+            <h:form id="form">
+                <p:growl id="messages" showDetail="true" />
+
+                <p:toolbar>
+                    <p:toolbarGroup>
+                        <p:commandButton value="Agregar usuario" icon="pi pi-plus" actionListener="#{crudView.openNew}"
+                                         update=":dialogs:manage-product-content" oncomplete="PF('AdministradorDialogoPaciente').show()"
+                                         styleClass="ui-button-success" style="margin-right: .5rem">
+                            <p:resetInput target=":dialogs:manage-product-content" />
+                        </p:commandButton>
+                        <p:commandButton id="delete-products-button" value="#{crudView.deleteButtonMessage}"
+                                         icon="pi pi-trash" actionListener="#{crudView.deleteSelectedProducts}"
+                                         styleClass="ui-button-danger" disabled="#{!crudView.hasSelectedProducts()}" update="@this">
+                            <p:confirm header="Confirmation" message="Eliminar los pacientes seleccionados?"
+                                       icon="pi pi-exclamation-triangle" />
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:dataTable id="dt-products" widgetVar="dtProducts" var="person" value="#{crudView.personas}"
+                             reflow="true" styleClass="products-table" selection="#{crudView.selectedPersonas}"
+                             rowKey="#{person.id}" paginator="true" rows="11" rowSelectMode="add" paginatorPosition="bottom">
+                    <f:facet name="header">
+                        <div class="products-table-header">
+                            <span style="font-weight: bold">Pacientes</span> <span
+                                class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i> <p:inputText
+                                    id="globalFilter" onkeyup="PF('dtProducts').filter()" placeholder="Buscar" />
+                            </span>
+
+                        </div>
+                    </f:facet>
+
+                    <p:ajax event="rowSelect" update=":form:delete-products-button" />
+                    <p:ajax event="rowUnselect" update=":form:delete-products-button" />
+                    <p:ajax event="rowSelectCheckbox" update=":form:delete-products-button" />
+                    <p:ajax event="rowUnselectCheckbox" update=":form:delete-products-button" />
+                    <p:ajax event="toggleSelect" update=":form:delete-products-button" />
+
+                    <p:column selectionMode="multiple" exportable="false"></p:column>
+                    
+                    <p:column headerText="Identificador" sortBy="#{person.id}" filterBy="#{person.id}">
+                        <h:outputText value="#{person.id}" />
+                    </p:column>
+                    <p:column headerText="Cédula" sortBy="#{person.cedula}" filterBy="#{person.cedula}">
+                        <h:outputText value="#{person.cedula}" />
+                    </p:column>
+                    <p:column headerText="Nombre" sortBy="#{person.nombres}" filterBy="#{person.nombres}">
+                        <h:outputText value="#{person.nombres}" />
+                    </p:column>
+                    <p:column headerText="Apellido" sortBy="#{person.apellidos}" filterBy="#{person.apellidos}">
+                        <h:outputText value="#{person.apellidos}" />
+                    </p:column>
+                    <p:column headerText="Teléfono" sortBy="#{person.telefono}" filterBy="#{person.telefono}">
+                        <h:outputText value="#{person.telefono}" />
+                    </p:column>
+                    <p:column headerText="Fecha de nacimiento" sortBy="#{person.fechanacimiento}" filterBy="#{person.fechanacimiento}">
+                        <h:outputText value="#{person.fechanacimiento}" />
+                    </p:column>
+                    <p:column headerText="Dirección" sortBy="#{person.direccion}" filterBy="#{person.direccion}">
+                        <h:outputText value="#{person.direccion}" />
+                    </p:column>
+                    <p:column headerText="Correo electrónico" sortBy="#{person.email}" filterBy="#{person.email}">
+                        <h:outputText value="#{person.email}" />
+                    </p:column>
+                    <p:column headerText="Sexo" sortBy="#{person.sexo}" filterBy="#{person.sexo}">
+                        <h:outputText value="#{person.sexo}" />
+                    </p:column>
+                    <p:column headerText="Clave" sortBy="#{person.contraseña}" filterBy="#{person.contraseña}">
+                        <h:outputText value="#{person.contraseña}" />
+                    </p:column>
+
+                    <!--  Trabajo  Ubicarle estado al usuario-->
+                    <p:column exportable="false">
+                        <p:commandButton icon="pi pi-pencil" update=":dialogs:manage-product-content"
+                                         oncomplete="PF('AdministradorDialogoPaciente').show()"
+                                         styleClass="edit-button rounded-button ui-button-success" process="@this">
+                            <f:setPropertyActionListener value="#{person}" target="#{crudView.personaSeleccionada}" />
+                            
+                            <p:resetInput target=":dialogs:manage-product-content" />
+                        </p:commandButton>
+                        <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash" process="@this"
+                                         oncomplete="PF('deleteProductDialog').show()">
+                            <f:setPropertyActionListener value="#{person}" target="#{crudView.personaSeleccionada}" />
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable>
+            </h:form>
+            
+            <h:form id="dialogs" >
+                <p:dialog id= "prueba" header="Datos de persona" showEffect="fade" modal="true" widgetVar="AdministradorDialogoPaciente"
+                          responsive="true" maximizable="true" >
+                    <p:outputPanel id="manage-product-content" class="ui-fluid">
+                        <p:outputPanel rendered="#{not empty crudView.personaSeleccionada}">
+                            <p:scrollPanel style="width:350px;height:500px">
+                            <div class="field">
+                                <p:outputLabel for="cedula">Cédula</p:outputLabel>
+                                <p:inputText id="cedula" value="#{crudView.personaSeleccionada.cedula}" required="true" />
+                            </div>
+                            <div class="field">
+                                <p:outputLabel for="name">Nombres</p:outputLabel>
+                                <p:inputText id="name" value="#{crudView.personaSeleccionada.nombres}" required="true" />
+                            </div>
+                            <div class="field">
+                                <p:outputLabel for="apellidos">Apellidos</p:outputLabel>
+                                <p:inputText id="apellidos" value="#{crudView.personaSeleccionada.apellidos}" required="true" />
+                            </div>
+                            <div class="field">
+                                <p:outputLabel for="telefono">Teléfono</p:outputLabel>
+                                <p:inputText id="telefono" type="number" value="#{crudView.personaSeleccionada.telefono}" required="true" >
+                                    <p:keyFilter regEx="/[0-9]/i"/>
+                                </p:inputText>
+                            </div>
+                            <div class="field">
+                                <p:outputLabel for="fechanacimiento">Fecha de nacimiento</p:outputLabel>
+                                <p:inputText id="fechanacimiento" value="#{crudView.personaSeleccionada.fechanacimiento}" required="true" />
+                            </div>
+                            <div class="field">
+                                <p:outputLabel for="direccion">Dirección</p:outputLabel>
+                                <p:inputText id="direccion" value="#{crudView.personaSeleccionada.direccion}" required="true" />
+                            </div>
+                            <div class="field">
+                                <p:outputLabel for="email">Correo electrónico</p:outputLabel>
+                                <p:inputText id="email" value="#{crudView.personaSeleccionada.email}" required="true" />
+                            </div>
+
+                            <div class="field">
+                                <p:outputLabel for="sexo">Sexo</p:outputLabel>
+                                <p:selectOneRadio id="sexo" value="#{crudView.personaSeleccionada.sexo}"
+                                                  layout="responsive" columns="2">
+                                    <f:selectItem itemLabel="Masculino" itemValue="Masculino" />
+                                    <f:selectItem itemLabel="Femenino" itemValue="Femenino" />
+                                    <f:selectItem itemLabel="Otro" itemValue="Otro" />
+                                </p:selectOneRadio>
+                            </div>  
+                            <div class="field">
+                                <p:outputLabel for="clave">Clave:</p:outputLabel>
+                                <p:inputText id="clave" value="#{crudView.personaSeleccionada.contraseña}" required="true" />
+                            </div>
+                            <div class="field">
+                                <p:outputLabel for="tipoU">Tipo de usuario</p:outputLabel>
+                                <p:selectOneRadio id="tipoU" value="#{crudView.personaSeleccionada.tipoU}"
+                                                  layout="responsive" columns="2">
+                                    <f:selectItem itemLabel="Laboratorista" itemValue="Laboratorista" />
+                                    <f:selectItem itemLabel="Paciente" itemValue="Paciente" />
+                                </p:selectOneRadio>
+                            </div>  
+                            </p:scrollPanel>
+
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{crudView.savePer()}"
+                                         update="manage-product-content" process="manage-product-content @this" onclick="PF('prueba').hide()"/>
+                        <!--p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('prueba').hide()"
+                                         class="ui-button-secondary" type="button" /-->
+                        <p:commandButton value="Cancelar" icon="pi pi-times" class="ui-button-secondary" 
+                                         update="manage-product-content" process="manage-product-content @this" onclick="PF('prueba').hide()"/>
+                        
+                    </f:facet>
+                </p:dialog>
+                <!-- ELIMINAR PACIENTE -->
+                <p:confirmDialog widgetVar="deleteProductDialog" showEffect="fade" width="300"
+                                 message="¿Eliminar este paciente?" header="Confirm" severity="warn">
+                    <p:commandButton value="Si" icon="pi pi-check" actionListener="#{crudView.deleteProduct()}"
+                                     process="@this" oncomplete="PF('deleteProductDialog').hide()" />
+                    <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                     onclick="PF('deleteProductDialog').hide()" />
+                </p:confirmDialog>
+
+                <p:confirmDialog global="true" showEffect="fade" width="300">
+                    <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                                     icon="pi pi-times" />
+                </p:confirmDialog>
+            </h:form>
+        </div>
+    </h:body>
+</html>
+

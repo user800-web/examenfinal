@@ -1,0 +1,51 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 11 ago. 2022, 01:16:05
+    Author     : Eduardo
+*/
+
+body {
+    display: flex;
+    align-items: flex-start;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: #f5f5f5;
+}
+
+.form-signin {
+    max-width: 500px;
+    padding: 15px;
+    position: absolute;
+    left: 14%;
+    top: 26.5%;
+}
+
+.form-signin input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.form-signin [type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.contenedor{
+    background: url('../../Imagenes/close-up-researcher-looking-through-ocular-lens.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;                
+}
+
+.blanquito{
+    background-color: whitesmoke;
+    border-radius: 10px;
+
+}

@@ -1,0 +1,46 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 23 jul. 2022, 11:41:39
+    Author     : Eduardo
+*/
+.disk {
+    background-image: url(‘disk.jpg’) !important;
+}
+
+.colorbody{
+    margin: 2%;
+    background-color: paleturquoise;
+}
+
+.margen {
+    margin: 0px;
+    padding: 0px;
+
+}
+
+.contenedor{
+    background: url('../../Imagenes/interialclinica.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+
+.negrita{
+    font-weight: bold;
+}
+
+.marginado{
+    margin: 10%;
+}
+
+.marginado2{
+    width: 50%;
+    justify-content: center;
+    align-items: center;
+}

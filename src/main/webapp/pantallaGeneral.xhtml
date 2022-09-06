@@ -1,0 +1,255 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="es-EC" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <h:head>
+        <title>Pantalla Principal</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous"/><!-- comment -->
+        <script src="https://maps.google.com/maps/api/js?sensor=true"></script>
+        <style>
+            .contenedor{
+                /*background: url('Imagenes/woman-working-in-laborator.jpg') no-repeat center center fixed;
+                -webkit-background-size: cover;
+                -moz-background-size: cover;
+                -o-background-size: cover;
+                background-size: cover;
+                margin: 0;
+                padding: 0;*/
+            }
+
+            .blanquito{
+                background-color: gainsboro;
+                border-radius: 10px;
+
+            }
+
+            main{
+                padding: 2%;
+                margin: 2%;
+            }
+
+            .quitarnegrita{
+                font-weight: normal;
+            }
+
+        </style>
+
+    </h:head>
+    <h:body class="contenedor">
+        <div>
+            <h:form>
+                <p:growl id="messages"/>
+
+                <p:menubar>
+                    <p:menuitem class="negrita" value="AlphaLabs" />
+                    <p:divider layout="vertical"/>
+                    <p:menuitem value="Inicio" icon="pi pi-fw pi-user" outcome="pantallaGeneral"/>
+
+                    <p:menuitem value="Informacion" icon="pi pi-fw pi-calendar" outcome="informacionlaboratorio"/>
+
+                    <p:menuitem value="Promociones" icon="pi pi-fw pi-ticket" outcome="promocioneslaboratorio"/>
+
+                    <p:menuitem value="contacto" icon="pi pi-fw pi-calendar-plus" outcome="contactolaboratorio"/>                    
+
+                    <p:divider layout="vertical"/>
+
+                    <f:facet name="options">
+                        <h:commandLink value="#{iniciarSesion.xhtml}" action="iniciarSesion.xhtml">                            
+                            <p:button value="Iniciar Sesión" icon="pi pi-user"/>   
+                        </h:commandLink>
+                    </f:facet>
+                </p:menubar>
+            </h:form>
+        </div>
+        <div class="card">
+            <h:form>
+                <p:breadCrumb>
+                    <p:menuitem value="Inicio"/>
+                </p:breadCrumb>
+            </h:form>
+        </div>
+        <br/>
+        <main>
+            <div>
+                <br/>
+                <h1 class="display-2 text-center"><strong>AlphaLabs</strong></h1>
+                <br/>
+                <br/>
+                <br/>
+            </div>
+            <div class=" p-2 row g-4 blanquito">
+                <div class="col-md-6">
+                    <img width="500" height="500" class="rounded mx-auto d-block" src="Imagenes/_125692970_gettyimages-1366124745.jpg" alt=""/>
+                </div>
+                <div class="col-md-6 relativo">
+                    <br/>
+                    <h5 class="quitarnegrita">La atención es matutina y vespertina en el Centro clinico AlphaLabs de manera que estamos atentos a sus necesidades. 
+                        También nuestro servicio de laboratorio habilita su servicio a domicilio con todas las medidas de bioseguridad 
+                        que garanticen la tranquilidad de los pacientes, este servicio se realiza siempre previa agenda y verificación de cobertura.</h5>
+
+                    <h6 class="quitarnegrita">Actualmente se dispone de pruebas rápidas anticuerpos SARS COV 2 para pacientes particulares.</h6>
+
+                    <h6 class="quitarnegrita">Más información contáctenos al 03 3006200 Extención 8154 /2080</h6>
+                </div>
+            </div>
+            <div>
+                <br/>
+                <br/>
+                <h6 class="quitarnegrita">El Laboratorio Clínico realiza exámenes de rutina y especializados, entregando resultados con la máxima fiabilidad y 
+                    confidencialidad para el paciente. Contamos con especialistas de amplia experiencia, así como con equipos y tecnología de última 
+                    generación, dando respuesta a todas las inquietudes generadas en nuestros pacientes.</h6>
+                <br/>
+            </div>
+            <div>
+                <h6 class="quitarnegrita">Se realizan exámenes de:</h6>
+                <br/>
+                <h1 class="text-center"><strong>Sangre</strong></h1>
+                <p:accordionPanel>
+                    <p:tab title="ENDOCRINOLOGÍA">
+                        <ul>
+                            <li>Hormona Tiroideo estimulante.</li>
+                            <li>Hormona Luteinizante.</li>
+                            <li>Estrógenos.</li>
+                            <li>Testosterona Total.</li>
+                        </ul>
+                    </p:tab>
+                    <p:tab title="QUÍMICA SANGUÍNEA">
+                        <ul>
+                            <li>Alcohol etílico.</li>
+                            <li>Glucosa Curva de Toleranci.</li>
+                            <li>Colesterol total.</li>
+                            <li>Triglicéridos.</li>
+                            <li>Hemoglobina glicosilada.</li>
+                        </ul>
+                    </p:tab>
+                    <p:tab title="HEMOSTASIA">
+                        <ul>
+                            <li>Tiempo de protrombina.</li>
+                            <li>Fibrinógeno.</li>
+                            <li>Tiempo de coagulación.</li>
+                            <li>Tiempo de hemorragia.</li>
+                        </ul>
+                    </p:tab>
+                    <p:tab title="SEROLOGÍA">
+                        <ul>
+                            <li>Factor reumatoideo cuantitativo.</li>
+                            <li>Proteína C reactiva cuantitativa</li>
+                        </ul>
+                    </p:tab>
+                    <p:tab title="ENZIMAS">
+                        <ul>
+                            <li>Amilasa.</li>
+                            <li>Fosfatasa ácida total.</li>
+                            <li>Lipasa.</li>
+                            <li>Troponina T ultra sensible.</li>
+                        </ul>
+                    </p:tab>
+                    <p:tab title="INMUNOLOGÍA">
+                        <ul>
+                            <li>Anticuerpos anti - microsomales.</li>
+                            <li>Anticuerpos anti - tiroglobulina.</li>
+                            <li>Tiroglobulina.</li>
+                        </ul>
+                    </p:tab>
+                </p:accordionPanel>
+                <br/>
+                <h1 class="text-center"><strong>Orina</strong></h1>
+                <p:accordionPanel>
+                    <p:tab title="UROANALISIS">
+                        <ul>
+                            <li>Microalbuminuría semicuantitativa.</li>
+                            <li>Prueba de embarazo.</li>
+                            <li>Espermatograma.</li>
+                        </ul>
+                    </p:tab>
+                    <p:tab title="QUÍMICA EN ORINA MICCIONAL">
+                        <ul>
+                            <li>Ácido úrico.</li>
+                            <li>Calcio.</li>
+                            <li>Creatinina.</li>
+                            <li>Fósforo.</li>
+                        </ul>
+                    </p:tab>
+                    <p:tab title="QUÍMICA EN ORINA DE 24 HORAS">
+                        <ul>
+                            <li>Ácido úrico.</li>
+                            <li>Proteinuria en orina de 24 horas.</li>
+                            <li>Proteinuria de Bence Jones.</li>
+                            <li>Urea.</li>
+                        </ul>
+                    </p:tab>
+                </p:accordionPanel>
+                <br/>
+                <h1 class="text-center"><strong>Heces</strong></h1>
+                <p:accordionPanel>
+                    <p:tab title="COPROANÁLISIS">
+                        <ul>
+                            <li>Coproparasitario por concentración.</li>
+                            <li>Coprológico.</li>
+                            <li>Investigación de azúcares reductores.</li>
+                            <li>Sangre oculta.</li>
+                            <li>Rotavirus Adenovirus.</li>
+                            <li>Antígeno de Helicobacter Pylori en Heces.</li>
+                        </ul>
+                    </p:tab>
+                </p:accordionPanel>
+                <br/>
+                <h1 class="text-center"><strong>Sangre y Orina</strong></h1>
+                <p:accordionPanel>
+                    <p:tab title="ELECTROLITOS">
+                        <ul>
+                            <li>Calcio total.</li>
+                            <li>Fósforo.</li>
+                            <li>Sodio.</li>
+                            <li>Gasometría arterial.</li>
+                            <li>venosa</li>
+                        </ul>
+                    </p:tab>
+                </p:accordionPanel>
+                <br/>
+                <h1 class="text-center"><strong>Examenes Especializados</strong></h1>
+                <br/>
+                <h6 class="quitarnegrita"> </h6>
+            </div>
+            <br/>
+            <hr class="border border-primary border-3 opacity-75"/>
+            <h3 class="text-center">Encuentranos en:</h3>
+            <div class="card">
+                <p:gmap center="-1.0301025296726518, -79.46953319335026" zoom="19" type="HYBRID" style="width:100%;height:400px"/>
+            </div>
+            <br/>
+            <div class="text-center">
+                <h:form>
+                    <h:commandLink value="#{contactolaboratorio.xhtml}" action="contactolaboratorio.xhtml">                            
+                        <p:button value="Ir a Contactos" icon="pi pi-calendar-plus"/>   
+                    </h:commandLink>
+                </h:form>
+            </div>
+        </main>
+        <br/>
+        <div class="piedepagina">
+            <footer class="footer py-3 bg-black">
+                <div class="container ">
+
+                    <div class=" p-5 row g-2">
+                        <div class="colores col-md-7 col-lg-8">
+                            <p class="text-muted">
+                                <strong>
+                                    @Copyright 2022 Karla and Eduardo
+                                </strong>
+                            </p>
+                        </div>
+                        <div class="text-center col-md-5 col-lg-4 order-md-last">
+                            <img class="img-fluid" src="Imagenes/logoFoot (2).png" alt=""/>
+                        </div>
+                    </div> 
+                </div>
+            </footer>
+        </div>        
+    </h:body>
+</html>
+

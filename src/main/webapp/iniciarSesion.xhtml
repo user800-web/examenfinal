@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="es-EC" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Inicio de Sesión</title>
+        <!-- CSS only -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous"/><!-- comment -->
+
+        <link rel="stylesheet" type="text/css" href="Recursosappweb/css/estiloiniciarsesion.css"/>
+    </h:head>
+    <h:body class="align-items-center contenedor">
+        <h:form>
+            <main class="form-signin w-100 m-auto blanquito">
+                <h1  class="text-center">Inicio de sesión</h1>
+                
+                <div  class="form-floating">                    
+                    <p:inputText class="form-control" id="txtUsuario" required="false" value="#{personaMB.usuario}"/>
+                    <p:outputLabel for="txtUsuario" value="Usuario"/>
+                </div>
+                <br/>
+                <div  class="form-floating">                    
+                    <p:inputText class="form-control" id="txtClave" required="false" value="#{personaMB.contraseña}"/>
+                    <p:outputLabel for="txtClave" value="Clave"/>
+                </div>
+                <br/>
+                <div>
+                    <p:commandButton class=" w-100 btn btn-success" icon="pi pi-chevron-right" value="Iniciar Sesión" action="#{personaMB.loginDos()}" />
+                    <br/>
+                    <h:commandLink value="#{pantallaGeneral.xhtml}" action="pantallaGeneral.xhtml">
+                        <br/>
+                        <p:button class=" w-100 btn btn-primary" icon="pi pi-chevron-left" value="Volver a la principal"/>
+                    </h:commandLink>
+                </div>
+            </main>
+        </h:form>
+    </h:body>
+</html>
+
