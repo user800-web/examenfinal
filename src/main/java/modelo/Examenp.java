@@ -28,17 +28,22 @@ import org.primefaces.PrimeFaces;
 @ViewScoped
 
 public class Examenp {
+    //DATOS QUE TENDRÁ LA CONSULTA QUE SE MOSTRARÁ EN EXÁMENES
     private int id;
     private int idpersonaa;
+    private String nombrePaciente;
     private int idcategoriaexam;    
     String nombreExamen="";
-    String idpersona="";
-    String categoriaexamen="";
-    String Observaciones="";
-    String idexamenes="";
-    String Precio="";
     String fechaRegistro="";
     String fechaEntregaResult="";
+    String Observaciones="";
+    
+    //TIPO DE DATO ERRONEO, BORRAR LUEGO
+    String idpersona="";
+    
+    String categoriaexamen="";    
+    String idexamenes="";
+    String Precio="";    
 
     public Examenp() {
     }
@@ -59,13 +64,25 @@ public class Examenp {
         this.Observaciones = Observaciones;
         this.Precio = Precio;
     }
-    public Examenp(int idexamen, int idpersona, int idcategoriaexam, String fechaRegistro, String fechaEntregaResult, String Observaciones ){
+    //CONSTRUCTOR PARA MOSTRAR DATOS EN SELECT
+    public Examenp(int idexamen, int idpersona, String nombrePaciente, int idcategoriaexam, String nombreExamen, String fechaRegistro, 
+            String fechaEntregaResult, String Observaciones ){
         this.id= idexamen;
         this.idpersonaa= idpersona;
+        this.nombrePaciente=nombrePaciente;
         this.idcategoriaexam = idcategoriaexam;
-        this.fechaEntregaResult =fechaRegistro;
+        this.nombreExamen=nombreExamen;
+        this.fechaRegistro =fechaRegistro;
         this.fechaEntregaResult=fechaEntregaResult;
         this.Observaciones=Observaciones;
+    }
+
+    public String getNombrePaciente() {
+        return nombrePaciente;
+    }
+
+    public void setNombrePaciente(String nombrePaciente) {
+        this.nombrePaciente = nombrePaciente;
     }
 
     public int getIdpersonaa() {
@@ -156,17 +173,17 @@ public class Examenp {
         this.Precio = Precio;
     }
     
-    public long insertExamenes() throws Exception {
+    public long insertExamenes(int idpersona, int idcate, String fechaRegis, String fechaEntre, String observacion) throws Exception {
         String sentence = "INSERT INTO public.examenes("
-                + "nombreExamen, idpersona, categoriaexamen, Observaciones, Precio)"
-                + "VALUES ('"+nombreExamen+"', '"+idpersona+"', '"+categoriaexamen+"', '"+Observaciones+"', '"+Precio+"');";
+                + " idpersona, idcategoriaexam, fecharegistro, \"fechaEntregaResult\", observacion)"
+                + "VALUES ( "+idpersona+", "+idcate+", '"+fechaRegis+"', '"+fechaEntre+"', '"+observacion+"');";
         System.out.println(sentence);
         Conexion conexion = new Conexion();
         return conexion.insertarExamenes(sentence);
     }
     
-    public long deleteExamenes() throws Exception {
-        String sentence = "DELETE FROM public.examenes where idexamenes = "+id+" ;";
+    public long deleteExamenes(int idExa) throws Exception {
+        String sentence = "DELETE FROM public.examenes where idexamen = "+idExa+" ;";
         System.out.println(sentence);
         Conexion conexion = new Conexion();
         return conexion.deletePerson(sentence);

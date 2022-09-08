@@ -33,8 +33,7 @@ import org.primefaces.PrimeFaces;
 @ViewScoped
 public class CrudView implements Serializable {
 
-    PrimeFaces current = PrimeFaces.current();
-    private Personap personaExamen;
+    PrimeFaces current = PrimeFaces.current();   
     private categoriaExamen comboCat;
     private Examenp examen;
     //PARA CATEGORIA
@@ -50,8 +49,11 @@ public class CrudView implements Serializable {
 
     private List<Personap> selectedPersonas;
     //EXAMENES
+    private Personap personaExamen;
+    private List<Personap> personasE;//PARA SELECT DE MOSTRAR PACIENTES
     private List<Examenp> examenes;
     private List<Examenp> selectedExamenes;
+    private Examenp examenSeleccionado;
     
     String cedula = "";
     String nombres = "";
@@ -67,7 +69,6 @@ public class CrudView implements Serializable {
 
     @PostConstruct
     public void init() {
-        this.examen = new Examenp();
 //        this.personas = new ArrayList<>();
 //        this.personas.add( new Personap("1254565098", "Erick", "Estevez", "0982135256", "2020-11-12", "Ninguna", "ninguno@gmsil.com", "M"));                
 
@@ -75,8 +76,26 @@ public class CrudView implements Serializable {
 
     public CrudView() throws Exception {
         cargarExamenes();
-        cargarPacientes();
+        cargarPacientes();//CARGAR PERSONAS EN GENERAL
+        cargarPacientesparaExa();//PARA SELECT DE MOSTRAR PACIENTES
         llenarCombo();
+        this.examenSeleccionado= new Examenp();
+    }
+
+    public Examenp getExamenSeleccionado() {
+        return examenSeleccionado;
+    }
+
+    public void setExamenSeleccionado(Examenp examenSeleccionado) {
+        this.examenSeleccionado = examenSeleccionado;
+    }
+
+    public List<Personap> getPersonasE() {
+        return personasE;
+    }
+
+    public void setPersonasE(List<Personap> personasE) {
+        this.personasE = personasE;
     }
 
     public List<Examenp> getExamenes() {
@@ -166,7 +185,7 @@ public class CrudView implements Serializable {
     public void setModo(String modo) {
         this.modo = modo;
     }
-
+    //CARAGAR PERSONAS EN GENERAL
     public void cargarPacientes() {
         try {
             this.personas = new ArrayList<>();
@@ -175,7 +194,32 @@ public class CrudView implements Serializable {
             ResultSet rs = conn.select("select * from persona;");
             while (rs.next()) {
                 this.personas.add(new Personap(
-                        //rs.getString("idpersona"),
+                        rs.getInt("idpersona"),
+                        rs.getString("cedula"),
+                        rs.getString("nombres"),
+                        rs.getString("apellidos"),
+                        rs.getString("telefono"),
+                        rs.getString("fechanacimiento"),
+                        rs.getString("direccion"),
+                        rs.getString("email"),
+                        rs.getString("sexo"),
+                        rs.getString("clave"),
+                        rs.getString("tipousuario")
+                ));
+            }
+            conn.cerrarConexion();
+        } catch (Exception ex) {
+            Logger.getLogger(CrudView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void cargarPacientesparaExa() {
+        try {
+            this.personasE = new ArrayList<>();
+            Conexion conn = new Conexion();
+            conn.abrirConexion();
+            ResultSet rs = conn.select("select * from persona where tipousuario= 'Paciente';");
+            while (rs.next()) {
+                this.personasE.add(new Personap(
                         rs.getInt("idpersona"),
                         rs.getString("cedula"),
                         rs.getString("nombres"),
@@ -199,13 +243,18 @@ public class CrudView implements Serializable {
             this.examenes = new ArrayList<>();
             Conexion conn = new Conexion();
             conn.abrirConexion();
-            ResultSet rs = conn.select("select * from public.examenes;");
+            ResultSet rs = conn.select("SELECT idexamen, e.idpersona, concat(p.nombres, ' ',p.apellidos) as paciente, e.idcategoriaexam, " +
+"c.tipo_nombre, fecharegistro, \"fechaEntregaResult\", observacion" +
+"	FROM public.examenes e inner join persona p on e.idpersona=p.idpersona inner join " +
+"    categoria_exa c on c.idcategoria=e.idcategoriaexam;");
             while (rs.next()) {
                 this.examenes.add(new Examenp(
                         rs.getInt("idexamen"),
                         rs.getInt("idpersona"),
+                        rs.getString("paciente"),
                         rs.getInt("idcategoriaexam"),
-                        rs.getString("fechaRegistro"),
+                        rs.getString("tipo_nombre"),
+                        rs.getString("fecharegistro"),
                         rs.getString("fechaEntregaResult"),
                         rs.getString("observacion")
                 ));
@@ -323,6 +372,8 @@ public class CrudView implements Serializable {
     public void openNew() {
         this.modo = "insertar";
         this.personaSeleccionada = new Personap();
+        //this.examenSeleccionado= new Examenp();
+        this.examen= new Examenp();
     }
 
     public void setGuardar() {
@@ -428,6 +479,26 @@ public class CrudView implements Serializable {
 //        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Product Removed"));
 //        PrimeFaces.current().ajax().update("form:messages", "form:dt-products");
     }
+    public String deleteExamen(){
+        System.out.println("ENTRO A deleteExamen");
+        try {
+            if (examenSeleccionado.deleteExamenes(this.examenSeleccionado.getId())== 1) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Exámen eliminado"));
+                System.out.println("ENTRO A DELETE");
+                this.cargarExamenes();
+                PrimeFaces.current().ajax().update("form:messages", "form:dt-products");
+                return "confirmation";
+            } else {
+                System.out.println("NO ENTRO A DELETE desde if");
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Paciente no eliminado"));
+                return "error";
+            }
+        } catch (Exception e) {
+            System.out.println("NO ENTRO A DELETE desde try catch" + e.toString());
+            /*addMessage(FacesMessage.SEVERITY_ERROR, "Información", "Error al guardar los datos.");*/
+            return "error";
+        }
+    }
 
     public String getDeleteButtonMessage() {
         if (hasSelectedProducts()) {
@@ -467,7 +538,13 @@ public class CrudView implements Serializable {
         }
     }
 
-    public void guardarExamen() {
+    public String guardarExamen() {
+        imprimirIdExamen();
+        String msg = "error";
+//        this.cargarPacientesparaExa();
+//        this.personaSeleccionada= this.personasE.get(0);
+        //System.out.println("id exámen:  " + this.examenSeleccionado.getId());
+        
         System.out.println("Datos para exámen");
         System.out.println("id persona: " + this.selectedPersonas.get(0).getId());
         System.out.println("id exámen" + this.examen.getIdexamenes());
@@ -477,6 +554,54 @@ public class CrudView implements Serializable {
         System.out.println("Fecha Registro" + this.examen.getFechaRegistro());
         System.out.println("Fecha Entrega" + this.examen.getFechaEntregaResult());
         System.out.println("Observación" + this.examen.getObservaciones());
+        if ((String.valueOf(this.examenSeleccionado.getId()) == null) || String.valueOf(this.examenSeleccionado.getId()).equals("0")){
+            System.out.println("INSERTAR EXAMEN");
+            try {
+                if (examen.insertExamenes(this.selectedPersonas.get(0).getId(), this.categSeleccionada.getIdcategoria(), 
+                        this.examen.getFechaRegistro(), this.examen.getFechaEntregaResult(), this.examen.getObservaciones()) == 1) {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Exámen agregado"));
+                    System.out.println("ENTRO A INSERT DE EXAMENES");
+                    this.cargarExamenes();
+                    PrimeFaces.current().ajax().update("form:messages", "form:dt-products");
+                    msg = "confirmation";
+                } else {
+                    System.out.println("NO ENTRO A INSERT DE EXAMENES");
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Exámen no agregado"));
+                    msg = "error";
+                }
+            } catch (Exception e) {
+                System.out.println("NO ENTRO A INSERT" + e.toString());
+                /*addMessage(FacesMessage.SEVERITY_ERROR, "Información", "Error al guardar los datos.");*/
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Exámen no agregado"));
+                msg = "error";
+            }
+        } else {
+            System.out.println("ACTUALIZAR EXÁMEN Y SU ID ES:" + String.valueOf(this.examenSeleccionado.getId()));
+//            try {
+//                if (personaSeleccionada.updateX() == 1) {
+//                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Paciente actualizado"));
+//                    System.out.println("ENTRO A UPDATE");
+//                    this.cargarPacientes();
+//                    PrimeFaces.current().ajax().update("form:messages", "form:dt-products");
+//                    msg = "confirmation";
+//                } else {
+//                    System.out.println("NO ENTRO A UPDATE");
+//                    /*FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Paciente no agregado"));*/
+//                    FacesContext.getCurrentInstance().addMessage(null,
+//                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Paciente no actualizado"));
+//                    msg = "error";
+//                }
+//            } catch (Exception e) {
+//                System.out.println("NO ENTRO A UPDATE" + e.toString());
+//                /*addMessage(FacesMessage.SEVERITY_ERROR, "Información", "Error al guardar los datos.");*/
+//                FacesContext.getCurrentInstance().addMessage(null,
+//                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Paciente no actualizado"));
+//                msg = "error";
+//            }
+        }
+        return msg;
     }
     public void imprimir(){
         System.out.println("Datos para exámen");
@@ -499,11 +624,50 @@ public class CrudView implements Serializable {
                         rs.getString("tipo_nombre"),
                         rs.getFloat("precio")
                 ));
-                System.out.println("ITERANDO CATEGORIAS");
+                //System.out.println("ITERANDO CATEGORIAS");
             }
             conn.cerrarConexion();
         } catch (Exception ex) {
             System.out.println("Error: " + ex.toString());
         }
+    }
+    public void imprimirIdExamen()
+    {
+        System.out.println("id exámen:  " + this.examenSeleccionado.getId());
+        this.cargarPacientesparaExa();
+        this.personaSeleccionada= this.personasE.get(0);
+        
+//        String msg = "error";
+//        if ((String.valueOf(this.examenSeleccionado.getId()) == null) || String.valueOf(this.examenSeleccionado.getId()).equals("0")){
+//            System.out.println("INSERTAR EXAMEN");
+//        } else {
+//            System.out.println("ACTUALIZAR Y SU ID ES:" + String.valueOf(this.examenSeleccionado.getId()));
+//            try {
+//                if (examen.updateExamenes() == 1) {
+//                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Paciente actualizado"));
+//                    System.out.println("ENTRO A UPDATE");
+//                    this.cargarPacientes();
+//                    PrimeFaces.current().ajax().update("form:messages", "form:dt-products");
+//                    msg = "confirmation";
+//                } else {
+//                    System.out.println("NO ENTRO A UPDATE");
+//                    /*FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Paciente no agregado"));*/
+//                    FacesContext.getCurrentInstance().addMessage(null,
+//                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Paciente no actualizado"));
+//                    msg = "error";
+//                }
+//            } catch (Exception e) {
+//                System.out.println("NO ENTRO A UPDATE" + e.toString());
+//                /*addMessage(FacesMessage.SEVERITY_ERROR, "Información", "Error al guardar los datos.");*/
+//                FacesContext.getCurrentInstance().addMessage(null,
+//                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Paciente no actualizado"));
+//                msg = "error";
+//            }
+//
+//            /*FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Product Updated"));*/
+//        }
+//        return msg;
+
+//  llave de
     }
 }
