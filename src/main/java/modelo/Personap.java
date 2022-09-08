@@ -26,19 +26,19 @@ import org.primefaces.PrimeFaces;
 @ViewScoped
 public class Personap {
 
-    private int id=0;
-    String idpersona="";
-    String cedula="";
-    String nombres="";
-    String apellidos="";
-    String telefono="";
-    String fechanacimiento="";
-    String direccion="";
-    String email="";
-    String sexo="";
-    String usuario="";
-    String contraseña="";
-    String tipoU="";
+    private int id = 0;
+    String idpersona = "";
+    String cedula = "";
+    String nombres = "";
+    String apellidos = "";
+    String telefono = "";
+    String fechanacimiento = "";
+    String direccion = "";
+    String email = "";
+    String sexo = "";
+    String usuario = "";
+    String contraseña = "";
+    String tipoU = "";
 
     public String getTipoU() {
         return tipoU;
@@ -48,7 +48,6 @@ public class Personap {
         this.tipoU = tipoU;
     }
 
-    
     public String getCedula() {
         return cedula;
     }
@@ -138,12 +137,13 @@ public class Personap {
     }
 
     public Personap() {
-    }   
+    }
+
     //PARA EL SELECT
-    public Personap(int id,String cedula, String nombres, String apellidos, String telefono, String fechanacimiento, String direccion, 
+    public Personap(int id, String cedula, String nombres, String apellidos, String telefono, String fechanacimiento, String direccion,
             String email, String sexo, String clave, String tipoU) {
         //this.idpersona=idpersona;
-        this.id=id;
+        this.id = id;
         this.cedula = cedula;
         this.nombres = nombres;
         this.apellidos = apellidos;
@@ -152,11 +152,12 @@ public class Personap {
         this.direccion = direccion;
         this.email = email;
         this.sexo = sexo;
-        this.contraseña=clave;
-        this.tipoU=tipoU;
+        this.contraseña = clave;
+        this.tipoU = tipoU;
     }
+
     //para agregar
-    public Personap(String cedula, String nombres, String apellidos, String telefono, String fechanacimiento, String direccion, 
+    public Personap(String cedula, String nombres, String apellidos, String telefono, String fechanacimiento, String direccion,
             String email, String sexo, String clave, String tipousuario) {
         //this.idpersona=idpersona;
         this.cedula = cedula;
@@ -167,17 +168,17 @@ public class Personap {
         this.direccion = direccion;
         this.email = email;
         this.sexo = sexo;
-        this.contraseña=clave;
-        this.tipoU=tipousuario;
+        this.contraseña = clave;
+        this.tipoU = tipousuario;
     }
 
-     /*para loginDos*/
+    /*para loginDos*/
     public Personap(String usuario, String contraseña) {
         this.usuario = usuario;
         this.contraseña = contraseña;
 
     }
-    
+
     public void print() {
         System.out.println(nombres);
     }
@@ -212,8 +213,8 @@ public class Personap {
 
     public String loginDos() throws Exception {
         String pantalla = "iniciarSesion";
-        String tipoUsuario="";
-        boolean pruebaUsuario= false;
+        String tipoUsuario = "";
+        boolean pruebaUsuario = false;
         Conexion unaConexion;
         unaConexion = new Conexion();
         unaConexion.abrirConexion();
@@ -226,21 +227,21 @@ public class Personap {
                 System.out.println(rs.getString("cedula"));
                 System.out.println(rs.getString("clave"));
                 System.out.println(rs.getString("tipousuario"));
-                tipoUsuario= rs.getString("tipousuario");
+                tipoUsuario = rs.getString("tipousuario");
                 //System.out.println("pantallaLaboratorista");
                 //pantalla = "pantallaLaboratorista";
             }
-            if(tipoUsuario.equals("Laboratorista")){
+            if (tipoUsuario.equals("Laboratorista")) {
                 pantalla = "pantallaLaboratorista";
-            }else{
-                if(tipoUsuario.equals("Paciente")){
-                pantalla = "COLOCAR NOMBRE DE LA PANTALLA DE PACIENTE";
-            }
+            } else {
+                if (tipoUsuario.equals("Paciente")) {
+                    pantalla = "Historialpaciente";
+                }
             }
             unaConexion.connecion.close();
         } catch (SQLException ex) {
             Logger.getLogger(Personap.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("Error conexion bd: "+ex.getMessage());
+            System.out.println("Error conexion bd: " + ex.getMessage());
             unaConexion.connecion.close();
         }
         if (pantalla.equals("iniciarSesion")) {
@@ -257,17 +258,18 @@ public class Personap {
                 + "cedula, nombres, apellidos, telefono, fechanacimiento, direccion, email, sexo)"
                 + "VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');", getCedula(), getNombres(), getApellidos(), getTelefono(),
                 getFechanacimiento(), getDireccion(), getEmail(), getSexo());
-        unaConexion.ejecutar(sentence); 
+        unaConexion.ejecutar(sentence);
         unaConexion.cerrarConexion();
         System.out.println(sentence);
         return true;
     }
+
     public long insert() throws Exception {
         long envio;
         String sentence = "INSERT INTO public.persona ("
                 + "cedula, nombres, apellidos, telefono, fechanacimiento, direccion, email, sexo, clave, tipousuario)"
-                + "VALUES ('"+cedula+"', '"+nombres+"', '"+apellidos+"', '"+telefono+"', '"+fechanacimiento+"', '"+direccion+"', '"+email
-                +"' , '"+sexo+"' , '"+contraseña+"', '"+tipoU+"' );";
+                + "VALUES ('" + cedula + "', '" + nombres + "', '" + apellidos + "', '" + telefono + "', '" + fechanacimiento + "', '" + direccion + "', '" + email
+                + "' , '" + sexo + "' , '" + contraseña + "', '" + tipoU + "' );";
         System.out.println(sentence);
         Conexion conexion = new Conexion();
         conexion.abrirConexion();
@@ -275,37 +277,40 @@ public class Personap {
         conexion.cerrarConexion();
         return envio;
     }
-    
+
     public long delete() throws Exception {
         long envio;
-        String sentence = "DELETE from public.persona where idpersona = "+id+" ;";
+        String sentence = "DELETE from public.persona where idpersona = " + id + " ;";
         System.out.println(sentence);
         Conexion conexion = new Conexion();
         conexion.abrirConexion();
-        envio= conexion.deletePerson(sentence);
+        envio = conexion.deletePerson(sentence);
         conexion.cerrarConexion();
         return envio;
     }
+
     public long updateX() throws Exception {
         long envio;
         System.out.println("en UPDATE DE PERSONAP");
-        String sentence = "UPDATE public.persona SET cedula = '"+cedula+"' ,nombres= '"+nombres+"', apellidos= '"+apellidos+"', telefono= '"+
-                telefono+"', fechanacimiento= '"+fechanacimiento+"', direccion= '"+direccion+"', email= '"+email+"', sexo= '" +
-        sexo+"' , clave='"+contraseña+"' , tipousuario = '"+tipoU+"' WHERE idpersona= "+id+" ;";        
+        String sentence = "UPDATE public.persona SET cedula = '" + cedula + "' ,nombres= '" + nombres + "', apellidos= '" + apellidos + "', telefono= '"
+                + telefono + "', fechanacimiento= '" + fechanacimiento + "', direccion= '" + direccion + "', email= '" + email + "', sexo= '"
+                + sexo + "' , clave='" + contraseña + "' , tipousuario = '" + tipoU + "' WHERE idpersona= " + id + " ;";
         System.out.println(sentence);
         Conexion conexion = new Conexion();
         conexion.abrirConexion();
-        envio= conexion.insertarPerson(sentence);
+        envio = conexion.insertarPerson(sentence);
         conexion.cerrarConexion();
         return envio;
     }
+
     /*SELECT DE PERSONAS*/
     public List<Personap> select() throws Exception {
         List<Personap> lista = new ArrayList<>();
-        
-        Conexion conn = new Conexion(); /*revisar si este constructor esrta inicializado*/
+
+        Conexion conn = new Conexion();
+        /*revisar si este constructor esrta inicializado*/
         ResultSet rs = conn.select("select * from personas;");
-        while(rs.next()) {
+        while (rs.next()) {
             lista.add(new Personap(
                     rs.getInt("id"),
                     rs.getString("cedula"),

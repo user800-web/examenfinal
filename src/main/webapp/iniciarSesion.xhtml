@@ -12,20 +12,45 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous"/><!-- comment -->
 
         <link rel="stylesheet" type="text/css" href="Recursosappweb/css/estiloiniciarsesion.css"/>
+        
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script type="text/javascript">
+            function showPassword(b) {
+                if (b) {
+                    document.getElementById('loginForm:contrasena').type = 'text';
+                    document.getElementById('loginForm:show').style.display = 'none';
+                    document.getElementById('loginForm:hide').style.display = 'inline';
+                } else {
+                    document.getElementById('loginForm:contrasena').type = 'password';
+                    document.getElementById('loginForm:show').style.display = 'inline';
+                    document.getElementById('loginForm:hide').style.display = 'none';
+                }
+            }
+
+            function changeCursor(obj, cursorStyle) {
+                obj.style.cursor = cursorStyle;
+            }
+        </script>
     </h:head>
     <h:body class="align-items-center contenedor">
-        <h:form>
+        <h:form id="loginForm">
             <main class="form-signin w-100 m-auto blanquito">
                 <h1  class="text-center">Inicio de sesión</h1>
-                
+
                 <div  class="form-floating">                    
                     <p:inputText class="form-control" id="txtUsuario" required="false" value="#{personaMB.usuario}"/>
                     <p:outputLabel for="txtUsuario" value="Usuario"/>
                 </div>
                 <br/>
-                <div  class="form-floating">                    
-                    <p:inputText class="form-control" id="txtClave" required="false" value="#{personaMB.contraseña}"/>
-                    <p:outputLabel for="txtClave" value="Clave"/>
+                <div  class="form-floating">
+                    <h:panelGroup>
+                        <h:inputSecret class="form-control" id="contrasena" required="false" value="#{personaMB.contraseña}"/>
+                        <p:outputLabel for="contrasena" value="Clave"/>
+                        <h:graphicImage id="show" url="Imagenes/show (1).png" width="35px" style="vertical-align:middle;" onmouseover="changeCursor(this, 'pointer');" onmouseout="changeCursor(this, 'default');" onclick="showPassword(true);" />
+                        <h:graphicImage id="hide" url="Imagenes/hidden (1).png" width="35px" style="display:none;vertical-align:middle;" onmouseover="changeCursor(this, 'pointer');" onmouseout="changeCursor(this, 'default');" onclick="showPassword(false);" />
+                    </h:panelGroup>
                 </div>
                 <br/>
                 <div>
