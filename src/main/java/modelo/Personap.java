@@ -212,7 +212,7 @@ public class Personap {
     }
 
     public String loginDos() throws Exception {
-        
+        return "hola";
     }
 
     public boolean insert(Personap per) throws Exception {
