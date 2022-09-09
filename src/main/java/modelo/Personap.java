@@ -212,42 +212,7 @@ public class Personap {
     }
 
     public String loginDos() throws Exception {
-        String pantalla = "iniciarSesion";
-        String tipoUsuario = "";
-        boolean pruebaUsuario = false;
-        Conexion unaConexion;
-        unaConexion = new Conexion();
-        unaConexion.abrirConexion();
-        try {
-            PreparedStatement stmt = unaConexion.connecion.prepareStatement("SELECT cedula, clave, tipousuario FROM public.persona where cedula=? and clave=? and tipousuario='Laboratorista';");
-            stmt.setString(1, usuario);
-            stmt.setString(2, contraseña);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                System.out.println(rs.getString("cedula"));
-                System.out.println(rs.getString("clave"));
-                System.out.println(rs.getString("tipousuario"));
-                tipoUsuario = rs.getString("tipousuario");
-                //System.out.println("pantallaLaboratorista");
-                //pantalla = "pantallaLaboratorista";
-            }
-            if (tipoUsuario.equals("Laboratorista")) {
-                pantalla = "pantallaLaboratorista";
-            } else {
-                if (tipoUsuario.equals("Paciente")) {
-                    pantalla = "Historialpaciente";
-                }
-            }
-            unaConexion.connecion.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(Personap.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("Error conexion bd: " + ex.getMessage());
-            unaConexion.connecion.close();
-        }
-        if (pantalla.equals("iniciarSesion")) {
-            PrimeFaces.current().executeScript("location.reload()");
-        }
-        return pantalla;
+        
     }
 
     public boolean insert(Personap per) throws Exception {
