@@ -11,6 +11,15 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous"/><!-- comment -->
 
         <link href="Recursosappweb/css/estilocrudpersona.css" rel="stylesheet" type="text/css"/>
+        <style>
+            .ui-datatable-frozenlayout-left {
+                width: 20%;
+            }
+
+            .ui-datatable-frozenlayout-right {
+                width: 80%;
+            }
+        </style>
     </h:head>
     <h:body>
         <div>           
@@ -62,9 +71,9 @@
                             <!--p:resetInput target=":dialogs:manage-product-content" /-->
                             <p:resetInput target=":dialogs:manage-busqueda-paciente" />
                         </p:commandButton>
-                        <p:commandButton id="delete-products-button" value="#{crudView.deleteButtonMessage}"
-                                         icon="pi pi-trash" actionListener="#{crudView.deleteSelectedProducts}"
-                                         styleClass="ui-button-danger" disabled="#{!crudView.hasSelectedProducts()}" update="@this">
+                        <p:commandButton id="delete-products-button" value="#{crudView.deleteButtonMessageExamen}"
+                                         icon="pi pi-trash" actionListener="#{crudView.deleteSelectedExamenes}"
+                                         styleClass="ui-button-danger" disabled="#{!crudView.hasSelectedExamenes()}" update="@this">
                             <p:confirm header="Confirmation" message="Eliminar los examenes seleccionados?"
                                        icon="pi pi-exclamation-triangle" />
                         </p:commandButton>
@@ -80,7 +89,6 @@
                                 class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i> <p:inputText
                                     id="globalFilter" onkeyup="PF('dtProducts').filter()" placeholder="Buscar" />
                             </span>
-
                         </div>
                     </f:facet>
 
@@ -90,7 +98,7 @@
                     <p:ajax event="rowUnselectCheckbox" update=":form:delete-products-button" />
                     <p:ajax event="toggleSelect" update=":form:delete-products-button" />
 
-                    <p:column selectionMode="single" exportable="true"></p:column>
+                    <p:column selectionMode="multiple" exportable="false"></p:column>
 
                     <p:column headerText="Identificador" sortBy="#{examen.id}" filterBy="#{examen.id}">
                         <h:outputText value="#{examen.id}" />
@@ -109,9 +117,7 @@
                     </p:column>
                     <p:column headerText="Observaciones" sortBy="#{examen.observaciones}" filterBy="#{examen.observaciones}">
                         <h:outputText value="#{examen.observaciones}" />
-                    </p:column>                    
-
-                    <!--  Trabajo  Ubicarle estado al usuario-->
+                    </p:column>
                     <p:column exportable="false">
                         <!-- NO MUESTRA NADA -->
                         <p:commandButton icon="pi pi-pencil" update=":dialogs:manage-busqueda-paciente"
@@ -120,13 +126,12 @@
                                          styleClass="edit-button rounded-button ui-button-success" process="@this">
                             <f:setPropertyActionListener value="#{examen}" target="#{crudView.examenSeleccionado}" />   
                         </p:commandButton>
-                        
+
                         <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash" process="@this"
                                          oncomplete="PF('deleteProductDialog').show()">
                             <f:setPropertyActionListener value="#{examen}" target="#{crudView.examenSeleccionado}" />
                         </p:commandButton>
                     </p:column>
-
                 </p:dataTable>
             </h:form>
 
@@ -164,12 +169,6 @@
                                             </div>
                                         </f:facet>
 
-                                        <p:ajax event="rowSelect" update=":form:delete-products-button" />
-                                        <p:ajax event="rowUnselect" update=":form:delete-products-button" />
-                                        <p:ajax event="rowSelectCheckbox" update=":form:delete-products-button" />
-                                        <p:ajax event="rowUnselectCheckbox" update=":form:delete-products-button" />
-                                        <p:ajax event="toggleSelect" update=":form:delete-products-button" />
-
                                         <p:column selectionMode="multiple" exportable="false"></p:column>
 
                                         <p:column headerText="Identificador" sortBy="#{person.id}" 
@@ -194,12 +193,55 @@
                     <f:facet name="footer">
                         <p:commandButton value="Siguiente" styleClass="rounded-button ui-button-secondary"
                                          actionListener="#{crudView.pacienteSelecionado()}"
-                                         update="manage-configurar-examen" process="manage-configurar-examen @this" 
+                                         update="manage-seleccionar-categorias" process="manage-seleccionar-categorias @this" 
                                          onclick="PF('pacienteExa').hide()" />
                     </f:facet>
-                </p:dialog>                
-                <!--/h:form>
-                <h:form id="crear_examen"-->
+                </p:dialog>
+                <!-- MOSTRAR LAS CARTEGORÍAS DE EXÁMENES -->
+                <p:dialog id= "dgcategorias" header="Elegir categorías para examen" showEffect="fade" modal="true" widgetVar="AdministradorseleccionCategorias"
+                          responsive="true" maximizable="true" >
+                    <p:outputPanel id="manage-seleccionar-categorias" class="ui-fluid">
+                        <p:outputPanel rendered="#{not empty crudView.categoriaSeleccionada}">
+                            <p:scrollPanel style="width:700px;height:500px">
+                                <div class="field">
+                                    <p:dataTable id="dt-categorias" widgetVar="dtCategorias" var="categorias" value="#{crudView.categorias}"
+                                                 scrollable="true" scrollHeight="200" 
+                                                 reflow="true" styleClass="products-table" selection="#{crudView.selectedCategorias}"
+                                                 rowKey="#{categorias.idcategoria}" paginator="true" rows="11" rowSelectMode="add" paginatorPosition="bottom">
+                                        <f:facet name="header">
+                                            <div class="products-table-header">
+                                                <span style="font-weight: bold">Pacientes</span> <span
+                                                    class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i> <p:inputText
+                                                        id="globalFilter" onkeyup="PF('dtCategorias').filter()" placeholder="Buscar" />
+                                                </span>
+                                            </div>
+                                        </f:facet>
+
+                                        <p:column selectionMode="multiple" exportable="false"></p:column>
+
+                                        <p:column headerText="Identificador"  sortBy="#{categorias.idcategoria}" 
+                                                  filterBy="#{categorias.idcategoria}">
+                                            <h:outputText value="#{categorias.idcategoria}" />
+                                        </p:column>
+                                        <p:column headerText="Nombre de exámen" sortBy="#{categorias.tipoExa}" filterBy="#{categorias.tipoExa}">
+                                            <h:outputText value="#{categorias.tipoExa}" />
+                                        </p:column>
+                                        <p:column headerText="Precio" sortBy="#{categorias.precio}" filterBy="#{categorias.precio}">
+                                            <h:outputText value="#{categorias.precio}" />
+                                        </p:column>
+                                    </p:dataTable>
+                                </div>
+                            </p:scrollPanel>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Siguiente" styleClass="rounded-button ui-button-secondary"
+                                         actionListener="#{crudView.examenesSeleccionados()}"
+                                         update="manage-configurar-examen" process="manage-configurar-examen @this" 
+                                         onclick="PF('dgcategorias').hide()" />
+                    </f:facet>
+                </p:dialog>
                 <!-- CONFIGURAREXAMEN -->
                 <p:dialog id= "confExa" header="Configurar exámen" showEffect="fade" modal="true" widgetVar="ConfigurarExamen"
                           responsive="true" maximizable="true" >
@@ -210,23 +252,17 @@
                                     <!-- DATOS DEL USUARIO -->
                                     <div class="field">
                                         <p:outputLabel for="cedula">Cédula</p:outputLabel>
-                                        <p:inputText id="cedula" value="#{crudView.personaExamen.id}" disabled="true" />
+                                        <p:inputText id="cedula" value="#{crudView.personaExamen.cedula}" disabled="true" />
                                     </div>
                                     <div class="field">
                                         <p:outputLabel for="name">Nombres</p:outputLabel>
-                                        <p:inputText id="name" value="#{crudView.personaExamen.nombres}" disabled="true" />
+                                        <p:inputText id="name" value="#{crudView.personaExamen.nombres} #{crudView.personaExamen.apellidos}" disabled="true" />
                                     </div>
                                     <div class="field">
-                                        <p:outputLabel for="apellidos">Apellidos</p:outputLabel>
-                                        <p:inputText id="apellidos" value="#{crudView.personaExamen.apellidos}" disabled="true" />
-                                    </div>
-                                    <div class="field">
-                                        <p:outputLabel for="option">Escoja la categoría del exámen</p:outputLabel>
-                                        <p:selectOneMenu id="option" value="#{crudView.categSeleccionada.idcategoria}" >
-                                            <f:selectItem itemLabel="Seleccione una opción" itemValue=""/>
-                                            <f:selectItems value="#{crudView.listadoDeCategorias}" var="categoria" 
-                                                           itemLabel="#{categoria.tipoExa} - $#{categoria.precio}" itemValue="#{categoria.idcategoria}"/>
-                                        </p:selectOneMenu>
+                                        <p:outputLabel>Categorías</p:outputLabel><br/>
+                                        <ui:repeat var="item" varStatus="status" value="#{crudView.selectedCategorias}">
+                                            #{status.index+1}. #{item.tipoExa}<br/>
+                                        </ui:repeat><br/>
                                     </div>
                                     <div class="field">
                                         <p:outputLabel for="fechaInicia">Fecha de exámen</p:outputLabel>
