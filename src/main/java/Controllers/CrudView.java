@@ -591,7 +591,6 @@ public class CrudView implements Serializable {
     public String guardarExamen() {
         imprimirIdExamen();
         String msg = "error";
-//        this.cargarPacientesparaExa();
 //        this.personaSeleccionada= this.personasE.get(0);
         //System.out.println("id exámen:  " + this.examenSeleccionado.getId());
 
