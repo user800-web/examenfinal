@@ -655,6 +655,7 @@ public class CrudView implements Serializable {
 
     public void imprimir() {
         System.out.println("Datos para exámen");
+        
     }
 
     public void imprimirIdExamen() {
