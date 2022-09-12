@@ -104,6 +104,21 @@ public class Conexion {
         return retorno;
     }
     
+    public long insertarOrden(String sentence) throws Exception {
+        int retorno = -1;
+        System.out.println("EN INSERTAR ORDEN");
+        try{
+            if (abrirConexion()) {
+                retorno = statement.executeUpdate(sentence);
+            }        
+        }catch(Exception ee){
+            System.out.println("NO INSERTO"+ee.toString());
+        } finally {
+            cerrarConexion();
+        }
+        return retorno;
+    }
+    
     public long insertarExamenes(String sentence) throws Exception {
         int retorno = -1;
         System.out.println("EN INSERTAR EXAMEN/ ACTUALIZAR");

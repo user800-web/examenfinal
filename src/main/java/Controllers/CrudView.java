@@ -22,6 +22,7 @@ import modelo.Conexion;
 import modelo.Examenp;
 import modelo.Personap;
 import modelo.categoriaExamen;
+import modelo.ordenes;
 //import modelo.categoriaExa;
 import org.primefaces.PrimeFaces;
 
@@ -52,6 +53,10 @@ public class CrudView implements Serializable {
     private List<Examenp> examenes;
     private List<Examenp> selectedExamenes;
     private Examenp examenSeleccionado;
+    private float precio;
+    
+    //ORDEN
+    private ordenes orden;
 
     String cedula = "";
     String nombres = "";
@@ -79,6 +84,22 @@ public class CrudView implements Serializable {
         cargarCategoriaExamen();
         //llenarCombo();
         this.examenSeleccionado = new Examenp();
+    }
+
+    public ordenes getOrden() {
+        return orden;
+    }
+
+    public void setOrden(ordenes orden) {
+        this.orden = orden;
+    }
+
+    public float getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(float precio) {
+        this.precio = precio;
     }
 
     public List<categoriaExamen> getCategorias() {
@@ -229,20 +250,23 @@ public class CrudView implements Serializable {
             this.examenes = new ArrayList<>();
             Conexion conn = new Conexion();
             conn.abrirConexion();
-            ResultSet rs = conn.select("SELECT idexamen, e.idpersona, concat(p.nombres, ' ',p.apellidos) as paciente, e.idcategoriaexam, "
-                    + "c.tipo_nombre, fecharegistro, \"fechaEntregaResult\", observacion"
-                    + "	FROM public.examenes e inner join persona p on e.idpersona=p.idpersona inner join "
-                    + "    categoria_exa c on c.idcategoria=e.idcategoriaexam;");
+            ResultSet rs = conn.select("select oe.id, e.idexamen, p.idpersona, concat(p.nombres, ' ',p.apellidos) as paciente, " +
+"ce.idcategoria, ce.tipo_nombre, e.observacion, e.\"precioUnit\", oe.fecharegistro, " +
+"oe.\"fechaentregaResult\" from orden_examen oe inner join examenes e on oe.id=e.idorden " +
+"inner join persona p on oe.idpersona=p.idpersona " +
+"inner join categoria_exa ce on e.idcategoriaexam=ce.idcategoria");
             while (rs.next()) {
                 this.examenes.add(new Examenp(
+                        rs.getInt("id"),
                         rs.getInt("idexamen"),
                         rs.getInt("idpersona"),
                         rs.getString("paciente"),
-                        rs.getInt("idcategoriaexam"),
+                        rs.getInt("idcategoria"),
                         rs.getString("tipo_nombre"),
+                        rs.getString("observacion"),
+                        rs.getFloat("precioUnit"),
                         rs.getString("fecharegistro"),
-                        rs.getString("fechaEntregaResult"),
-                        rs.getString("observacion")
+                        rs.getString("fechaEntregaResult")
                 ));
             }
             conn.cerrarConexion();
@@ -576,10 +600,12 @@ public class CrudView implements Serializable {
     }
 
     public void examenesSeleccionados() {
+        precio=0;
         System.out.println("NOMBRE DE CATEGORÍAS SELECCIONADAS");
         if (selectedCategorias.size() > 0) {
             for (int i = 0; i < selectedCategorias.size(); i++) {
                 System.out.println(selectedCategorias.get(i).getTipoExa());
+                precio=precio+selectedCategorias.get(i).getPrecio();
             }
             current.executeScript("PF('ConfigurarExamen').show();");
         } else {
@@ -594,18 +620,28 @@ public class CrudView implements Serializable {
 //        this.personaSeleccionada= this.personasE.get(0);
         //System.out.println("id exámen:  " + this.examenSeleccionado.getId());
 
-        System.out.println("Datos para exámen");
-        System.out.println("id persona: " + this.selectedPersonas.get(0).getId());
-        System.out.println("id exámen" + this.examen.getIdexamenes());
-        //System.out.println("categoria" + this.categSeleccionada.getIdcategoria());
-        //System.out.println("CREO QUE ID DE categoria"+ this.listadoDeCategorias);
-        //System.out.println("Precio"+ this.comboCat.selectedOption.getPrecio());
-        System.out.println("Fecha Registro" + this.examen.getFechaRegistro());
-        System.out.println("Fecha Entrega" + this.examen.getFechaEntregaResult());
-        System.out.println("Observación" + this.examen.getObservaciones());
-        if ((String.valueOf(this.examenSeleccionado.getId()) == null) || String.valueOf(this.examenSeleccionado.getId()).equals("0")) {
+//        System.out.println("Datos para exámen");
+//        System.out.println("id persona: " + this.selectedPersonas.get(0).getId());
+//        System.out.println("id exámen" + this.examen.getIdexamenes());
+//        //System.out.println("categoria" + this.categSeleccionada.getIdcategoria());
+//        //System.out.println("CREO QUE ID DE categoria"+ this.listadoDeCategorias);
+//        //System.out.println("Precio"+ this.comboCat.selectedOption.getPrecio());
+//        System.out.println("Fecha Registro" + this.examen.getFechaRegistro());
+//        System.out.println("Fecha Entrega" + this.examen.getFechaEntregaResult());
+//        System.out.println("Observación" + this.examen.getObservaciones());
+        if ((String.valueOf(this.examenSeleccionado.getIdOrden()) == null) || String.valueOf(this.examenSeleccionado.getIdOrden()).equals("0")) {
             System.out.println("INSERTAR EXAMEN");
+            this.orden= new ordenes();
+            orden.setIdpersona(this.selectedPersonas.get(0).getId());
+            orden.setTotalexamenes(selectedCategorias.size());
+            orden.setFecharegistro(examen.getFechaRegistro());
+            orden.setFechaentregaResult(examen.getFechaEntregaResult());
+            orden.setTotal(precio);
+            
             try {
+//                if(orden.insert()>0){
+                    System.out.println("ULTIMO ID INGRESADO EN LA BD: "+orden.insert());
+//                }
 //                if (examen.insertExamenes(this.selectedPersonas.get(0).getId(), this.categSeleccionada.getIdcategoria(), 
 //                        this.examen.getFechaRegistro(), this.examen.getFechaEntregaResult(), this.examen.getObservaciones()) == 1) {
 //                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Exámen agregado"));
@@ -622,12 +658,12 @@ public class CrudView implements Serializable {
             } catch (Exception e) {
                 System.out.println("NO ENTRO A INSERT" + e.toString());
                 /*addMessage(FacesMessage.SEVERITY_ERROR, "Información", "Error al guardar los datos.");*/
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Exámen no agregado"));
+//                FacesContext.getCurrentInstance().addMessage(null,
+//                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Exámen no agregado"));
                 msg = "error";
             }
         } else {
-            System.out.println("ACTUALIZAR EXÁMEN Y SU ID ES:" + String.valueOf(this.examenSeleccionado.getId()));
+            System.out.println("ACTUALIZAR EXÁMEN Y SU ID ES:" + String.valueOf(this.examenSeleccionado.getIdOrden()));
 //            try {
 //                if (personaSeleccionada.updateX() == 1) {
 //                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Paciente actualizado"));

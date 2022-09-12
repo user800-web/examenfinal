@@ -29,6 +29,7 @@ import org.primefaces.PrimeFaces;
 
 public class Examenp {
     //DATOS QUE TENDRÁ LA CONSULTA QUE SE MOSTRARÁ EN EXÁMENES
+    private int idOrden;
     private int id;
     private int idpersonaa;
     private String nombrePaciente;
@@ -37,6 +38,7 @@ public class Examenp {
     String fechaRegistro="";
     String fechaEntregaResult="";
     String Observaciones="";
+    float precioUnit;
     
     //TIPO DE DATO ERRONEO, BORRAR LUEGO
     String idpersona="";
@@ -65,16 +67,34 @@ public class Examenp {
         this.Precio = Precio;
     }
     //CONSTRUCTOR PARA MOSTRAR DATOS EN SELECT
-    public Examenp(int idexamen, int idpersona, String nombrePaciente, int idcategoriaexam, String nombreExamen, String fechaRegistro, 
-            String fechaEntregaResult, String Observaciones ){
+    public Examenp(int idOrden, int idexamen, int idpersona, String nombrePaciente, int idcategoriaexam, String nombreExamen, 
+            String Observaciones, float precioUnit, String fechaRegistro, String fechaEntregaResult){
+        this.idOrden= idOrden;
         this.id= idexamen;
         this.idpersonaa= idpersona;
         this.nombrePaciente=nombrePaciente;
         this.idcategoriaexam = idcategoriaexam;
         this.nombreExamen=nombreExamen;
+        this.Observaciones=Observaciones;
+        this.precioUnit=precioUnit;
         this.fechaRegistro =fechaRegistro;
         this.fechaEntregaResult=fechaEntregaResult;
-        this.Observaciones=Observaciones;
+    }
+
+    public int getIdOrden() {
+        return idOrden;
+    }
+
+    public void setIdOrden(int idOrden) {
+        this.idOrden = idOrden;
+    }
+
+    public float getPrecioUnit() {
+        return precioUnit;
+    }
+
+    public void setPrecioUnit(float precioUnit) {
+        this.precioUnit = precioUnit;
     }
 
     public String getNombrePaciente() {
