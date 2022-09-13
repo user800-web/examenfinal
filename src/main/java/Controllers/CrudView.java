@@ -46,6 +46,7 @@ public class CrudView implements Serializable {
     private List<Personap> personas;
     private Personap personaSeleccionada;
     private List<Personap> selectedPersonas;
+    private Personap temp;
 
     //EXAMENES
     private Personap personaExamen;
@@ -54,10 +55,11 @@ public class CrudView implements Serializable {
     private List<Examenp> selectedExamenes;
     private Examenp examenSeleccionado;
     private float precio;
-    
+
     //ORDEN
     private ordenes orden;
-
+    
+    int limite;
     String cedula = "";
     String nombres = "";
     String apellidos = "";
@@ -74,7 +76,10 @@ public class CrudView implements Serializable {
     public void init() {
 //        this.personas = new ArrayList<>();
 //        this.personas.add( new Personap("1254565098", "Erick", "Estevez", "0982135256", "2020-11-12", "Ninguna", "ninguno@gmsil.com", "M"));                
-
+        this.personaSeleccionada = new Personap();
+        this.categoriaSeleccionada = new categoriaExamen();//si elimino esta línea no se carga el datatable
+        //this.examenSeleccionado= new Examenp();
+        this.examen = new Examenp();
     }
 
     public CrudView() throws Exception {
@@ -250,11 +255,11 @@ public class CrudView implements Serializable {
             this.examenes = new ArrayList<>();
             Conexion conn = new Conexion();
             conn.abrirConexion();
-            ResultSet rs = conn.select("select oe.id, e.idexamen, p.idpersona, concat(p.nombres, ' ',p.apellidos) as paciente, " +
-"ce.idcategoria, ce.tipo_nombre, e.observacion, e.\"precioUnit\", oe.fecharegistro, " +
-"oe.\"fechaentregaResult\" from orden_examen oe inner join examenes e on oe.id=e.idorden " +
-"inner join persona p on oe.idpersona=p.idpersona " +
-"inner join categoria_exa ce on e.idcategoriaexam=ce.idcategoria");
+            ResultSet rs = conn.select("select oe.id, e.idexamen, p.idpersona, concat(p.nombres, ' ',p.apellidos) as paciente, "
+                    + "ce.idcategoria, ce.tipo_nombre, e.observacion, e.\"precioUnit\", oe.fecharegistro, "
+                    + "oe.\"fechaentregaResult\" from orden_examen oe inner join examenes e on oe.id=e.idorden "
+                    + "inner join persona p on oe.idpersona=p.idpersona "
+                    + "inner join categoria_exa ce on e.idcategoriaexam=ce.idcategoria");
             while (rs.next()) {
                 this.examenes.add(new Examenp(
                         rs.getInt("id"),
@@ -585,27 +590,29 @@ public class CrudView implements Serializable {
         //this.comboCat = new categoriaExamen();
         //this.comboCat.llenarCombo();
         try {
+
             if (this.selectedPersonas.size() == 1) {
                 System.out.println(this.selectedPersonas.get(0).getId());
                 this.personaExamen = this.selectedPersonas.get(0);
 //            this.comboCat.cargarCombo();
+
                 current.executeScript("PF('AdministradorseleccionCategorias').show();");
             } else {
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Sólo se puede elegir un paciente para agregar exámenes"));
             }
         } catch (Exception e) {
-            System.out.println("Error en pacienteSeleccionado: "+e.toString());
+            System.out.println("Error en pacienteSeleccionado: " + e.toString());
         }
     }
 
     public void examenesSeleccionados() {
-        precio=0;
+        precio = 0;
         System.out.println("NOMBRE DE CATEGORÍAS SELECCIONADAS");
         if (selectedCategorias.size() > 0) {
             for (int i = 0; i < selectedCategorias.size(); i++) {
                 System.out.println(selectedCategorias.get(i).getTipoExa());
-                precio=precio+selectedCategorias.get(i).getPrecio();
+                precio = precio + selectedCategorias.get(i).getPrecio();
             }
             current.executeScript("PF('ConfigurarExamen').show();");
         } else {
@@ -615,10 +622,13 @@ public class CrudView implements Serializable {
     }
 
     public String guardarExamen() {
-        imprimirIdExamen();
+//        imprimirIdExamen(5);
         String msg = "error";
+        long numOrden;
+        long almacena = 0;
+        try {
 //        this.personaSeleccionada= this.personasE.get(0);
-        //System.out.println("id exámen:  " + this.examenSeleccionado.getId());
+            //System.out.println("id exámen:  " + this.examenSeleccionado.getId());
 
 //        System.out.println("Datos para exámen");
 //        System.out.println("id persona: " + this.selectedPersonas.get(0).getId());
@@ -629,19 +639,45 @@ public class CrudView implements Serializable {
 //        System.out.println("Fecha Registro" + this.examen.getFechaRegistro());
 //        System.out.println("Fecha Entrega" + this.examen.getFechaEntregaResult());
 //        System.out.println("Observación" + this.examen.getObservaciones());
-        if ((String.valueOf(this.examenSeleccionado.getIdOrden()) == null) || String.valueOf(this.examenSeleccionado.getIdOrden()).equals("0")) {
-            System.out.println("INSERTAR EXAMEN");
-            this.orden= new ordenes();
-            orden.setIdpersona(this.selectedPersonas.get(0).getId());
-            orden.setTotalexamenes(selectedCategorias.size());
-            orden.setFecharegistro(examen.getFechaRegistro());
-            orden.setFechaentregaResult(examen.getFechaEntregaResult());
-            orden.setTotal(precio);
-            
-            try {
-//                if(orden.insert()>0){
-                    System.out.println("ULTIMO ID INGRESADO EN LA BD: "+orden.insert());
-//                }
+            if ((String.valueOf(this.examenSeleccionado.getIdOrden()) == null) || String.valueOf(this.examenSeleccionado.getIdOrden()).equals("0")) {
+                System.out.println("INSERTAR EXAMEN");
+                //ASIGNAR VALORES QUE NECESITA LA ORDEN
+                this.orden = new ordenes();
+                orden.setIdpersona(this.selectedPersonas.get(0).getId());
+                orden.setTotalexamenes(selectedCategorias.size());
+                orden.setFecharegistro(examen.getFechaRegistro());
+                orden.setFechaentregaResult(examen.getFechaEntregaResult());
+                orden.setTotal(precio);
+                try {
+                    numOrden = orden.insert();//INSERTO LA ORDEN
+                    if (numOrden > 0) {
+                        System.out.println("ID DE LA ORDEN: " + numOrden);
+                        //INGRESAR CADA EXAMEN SELECCIONADO
+                        for (int i = 0; i < selectedCategorias.size(); i++) {
+                            System.out.println(selectedCategorias.get(i).getTipoExa());
+                            almacena = almacena + examen.insertExamenes(numOrden, selectedCategorias.get(i).getIdcategoria(),
+                                    this.examen.getObservaciones(), selectedCategorias.get(i).getPrecio());
+                        }
+                        if (almacena == selectedCategorias.size()) {
+                            if (selectedCategorias.size() == 1) {
+                                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Exámen agregado"));
+                                this.selectedCategorias = new ArrayList<categoriaExamen>();
+                                this.selectedPersonas = new ArrayList<Personap>();
+                                this.selectedExamenes = new ArrayList<Examenp>();
+                                this.cargarExamenes();
+                            } else {
+                                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Exámenes agregados"));
+                                this.selectedCategorias = new ArrayList<categoriaExamen>();
+                                this.selectedPersonas = new ArrayList<Personap>();
+                                this.selectedExamenes = new ArrayList<Examenp>();
+                                this.cargarExamenes();
+                            }
+                        } else {
+                            FacesContext.getCurrentInstance().addMessage(null,
+                                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Orden no agregada"));
+                            //ELIMINAR NUMERO DE ORDEN
+                        }
+                    }
 //                if (examen.insertExamenes(this.selectedPersonas.get(0).getId(), this.categSeleccionada.getIdcategoria(), 
 //                        this.examen.getFechaRegistro(), this.examen.getFechaEntregaResult(), this.examen.getObservaciones()) == 1) {
 //                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Exámen agregado"));
@@ -655,15 +691,15 @@ public class CrudView implements Serializable {
 //                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Exámen no agregado"));
 //                    msg = "error";
 //                }
-            } catch (Exception e) {
-                System.out.println("NO ENTRO A INSERT" + e.toString());
-                /*addMessage(FacesMessage.SEVERITY_ERROR, "Información", "Error al guardar los datos.");*/
+                } catch (Exception e) {
+                    System.out.println("NO ENTRO A INSERT" + e.toString());
+                    /*addMessage(FacesMessage.SEVERITY_ERROR, "Información", "Error al guardar los datos.");*/
 //                FacesContext.getCurrentInstance().addMessage(null,
 //                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Exámen no agregado"));
-                msg = "error";
-            }
-        } else {
-            System.out.println("ACTUALIZAR EXÁMEN Y SU ID ES:" + String.valueOf(this.examenSeleccionado.getIdOrden()));
+                    msg = "error";
+                }
+            } else {
+                System.out.println("ACTUALIZAR EXÁMEN Y SU ID ES:" + String.valueOf(this.examenSeleccionado.getIdOrden()));
 //            try {
 //                if (personaSeleccionada.updateX() == 1) {
 //                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Paciente actualizado"));
@@ -685,40 +721,60 @@ public class CrudView implements Serializable {
 //                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Paciente no actualizado"));
 //                msg = "error";
 //            }
+            }
+        } catch (Exception ex) {
+            System.out.println("ERROR EN METODO GUARDAREXAMEN" + ex.toString());
         }
         return msg;
     }
 
     public void imprimir() {
         System.out.println("Datos para exámen");
-        
+
     }
 
-    public void imprimirIdExamen() {
-        System.out.println("id exámen:  " + this.examenSeleccionado.getId());
+    public void imprimirIdExamen(Examenp exa) {
+        orden.setId(exa.getIdOrden());
+        System.out.println("ID DE ORDEN: " + exa.getIdOrden());
+        this.examenSeleccionado = exa;
+        System.out.println("id orden:  " + this.examenSeleccionado.getIdOrden());
         this.cargarPacientesparaExa();
-        this.personaSeleccionada = this.personasE.get(0);
+        //this.personaSeleccionada = this.personasE.get(0);
+        //this.personaSeleccionada.setId(this.examenSeleccionado.getIdpersonaa());
+        //REVISAR PARA QUE APAREZCA PERSONA SELECCIONADA EN DATATABLE
+        this.selectedPersonas = new ArrayList<Personap>();
+        temp = new Personap();
+        String sentence = "select * from persona where idpersona=(select idpersona from orden_examen where id= " + exa.getIdOrden() + " )";
+        try {
+            Conexion conn = new Conexion();
+            conn.abrirConexion();
+            ResultSet rs = conn.select(sentence);
+            while (rs.next()) {
+                temp = new Personap(
+                        rs.getInt("idpersona"),
+                        rs.getString("cedula"),
+                        rs.getString("nombres"),
+                        rs.getString("apellidos"),
+                        rs.getString("telefono"),
+                        rs.getString("fechanacimiento"),
+                        rs.getString("direccion"),
+                        rs.getString("email"),
+                        rs.getString("sexo"),
+                        rs.getString("clave"),
+                        rs.getString("tipousuario")
+                );
+            }
+            //REALIZAR SELECT PARA SABER CUANTOS EXAMENES CONTINE LA ORDEN Y GUARDAR EN LIMITE
+            //SI LIMITE ES MAYOR A 0 SE PRESENTARA MENSAJE INDICANDO QUE SÓLO PUEDE ACTUALIZAR X EXAMENES
+            this.selectedPersonas.add(temp);
+            System.out.println(temp.getCedula());
+            conn.cerrarConexion();
+        } catch (Exception ex) {
+            Logger.getLogger(CrudView.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-//        String msg = "error";
-//        if ((String.valueOf(this.examenSeleccionado.getId()) == null) || String.valueOf(this.examenSeleccionado.getId()).equals("0")){
-//            System.out.println("INSERTAR EXAMEN");
-//        } else {
-//            System.out.println("ACTUALIZAR Y SU ID ES:" + String.valueOf(this.examenSeleccionado.getId()));
-//            try {
-//                if (examen.updateExamenes() == 1) {
-//                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Paciente actualizado"));
-//                    System.out.println("ENTRO A UPDATE");
-//                    this.cargarPacientes();
-//                    PrimeFaces.current().ajax().update("form:messages", "form:dt-products");
-//                    msg = "confirmation";
-//                } else {
-//                    System.out.println("NO ENTRO A UPDATE");
-//                    /*FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Paciente no agregado"));*/
-//                    FacesContext.getCurrentInstance().addMessage(null,
-//                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Paciente no actualizado"));
-//                    msg = "error";
-//                }
-//            } catch (Exception e) {
+//        this.selectedPersonas.add(this.personasE.get(exa.getIdpersonaa()));
+        PrimeFaces.current().ajax().update("dialogs:dt-pacientes");
 //                System.out.println("NO ENTRO A UPDATE" + e.toString());
 //                /*addMessage(FacesMessage.SEVERITY_ERROR, "Información", "Error al guardar los datos.");*/
 //                FacesContext.getCurrentInstance().addMessage(null,

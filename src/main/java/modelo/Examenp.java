@@ -193,10 +193,10 @@ public class Examenp {
         this.Precio = Precio;
     }
     
-    public long insertExamenes(int idpersona, int idcate, String fechaRegis, String fechaEntre, String observacion) throws Exception {
-        String sentence = "INSERT INTO public.examenes("
-                + " idpersona, idcategoriaexam, fecharegistro, \"fechaEntregaResult\", observacion)"
-                + "VALUES ( "+idpersona+", "+idcate+", '"+fechaRegis+"', '"+fechaEntre+"', '"+observacion+"');";
+    public long insertExamenes(long orden, int idcate, String observacion, float precioUnit) throws Exception {
+        String sentence = "INSERT INTO public.examenes(" +
+"	idorden, idcategoriaexam, observacion, \"precioUnit\" )" +
+"	VALUES ( "+orden+", "+idcate+", '"+observacion+"', "+precioUnit+" );";
         System.out.println(sentence);
         Conexion conexion = new Conexion();
         return conexion.insertarExamenes(sentence);

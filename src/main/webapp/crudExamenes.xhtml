@@ -71,6 +71,7 @@
                             <!--p:resetInput target=":dialogs:manage-product-content" /-->
                             <p:resetInput target=":dialogs:manage-busqueda-paciente" />
                         </p:commandButton>
+                        <!-- COLOCAR rendered="#{false}" EN ELIMINAR, LUEGO-->
                         <p:commandButton id="delete-products-button" value="#{crudView.deleteButtonMessageExamen}"
                                          icon="pi pi-trash" actionListener="#{crudView.deleteSelectedExamenes}"
                                          styleClass="ui-button-danger" disabled="#{!crudView.hasSelectedExamenes()}" update="@this">
@@ -124,15 +125,16 @@
                     <p:column exportable="false">
                         <!-- ACTUALIZAR EXÁMEN -->
                         <p:commandButton icon="pi pi-pencil" update=":dialogs:manage-busqueda-paciente"
-                                         actionListener="#{crudView.imprimirIdExamen}"
+                                         actionListener="#{crudView.imprimirIdExamen(examen)}"
                                          oncomplete="PF('AdministradorBusquedaPaciente').show()"
                                          styleClass="edit-button rounded-button ui-button-success" process="@this">
-                            <f:setPropertyActionListener value="#{examen}" target="#{crudView.examenSeleccionado}" />   
+                            <f:setPropertyActionListener value="#{examen}" target="#{crudView.examenSeleccionado}" />
+                            <p:resetInput target=":dialogs:manage-busqueda-paciente" />
                         </p:commandButton>
 
                         <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash" process="@this"
                                          oncomplete="PF('deleteProductDialog').show()">
-                            <f:setPropertyActionListener value="#{examen}" target="#{crudView.examenSeleccionado}" />
+                            <f:setPropertyActionListener value="#{examen}" target="#{crudView.imprimirIdExamen(examen)}" />
                         </p:commandButton>
                     </p:column>
                 </p:dataTable>
@@ -213,7 +215,7 @@
                                                  rowKey="#{categorias.idcategoria}" paginator="true" rows="11" rowSelectMode="add" paginatorPosition="bottom">
                                         <f:facet name="header">
                                             <div class="products-table-header">
-                                                <span style="font-weight: bold">Pacientes</span> <span
+                                                <span style="font-weight: bold">Categorías</span> <span
                                                     class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i> <p:inputText
                                                         id="globalFilter" onkeyup="PF('dtCategorias').filter()" placeholder="Buscar" />
                                                 </span>
