@@ -58,7 +58,7 @@ public class CrudView implements Serializable {
 
     //ORDEN
     private ordenes orden;
-    
+
     int limite;
     String cedula = "";
     String nombres = "";
@@ -678,19 +678,6 @@ public class CrudView implements Serializable {
                             //ELIMINAR NUMERO DE ORDEN
                         }
                     }
-//                if (examen.insertExamenes(this.selectedPersonas.get(0).getId(), this.categSeleccionada.getIdcategoria(), 
-//                        this.examen.getFechaRegistro(), this.examen.getFechaEntregaResult(), this.examen.getObservaciones()) == 1) {
-//                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Exámen agregado"));
-//                    System.out.println("ENTRO A INSERT DE EXAMENES");
-//                    this.cargarExamenes();
-//                    PrimeFaces.current().ajax().update("form:messages", "form:dt-products");
-//                    msg = "confirmation";
-//                } else {
-//                    System.out.println("NO ENTRO A INSERT DE EXAMENES");
-//                    FacesContext.getCurrentInstance().addMessage(null,
-//                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Exámen no agregado"));
-//                    msg = "error";
-//                }
                 } catch (Exception e) {
                     System.out.println("NO ENTRO A INSERT" + e.toString());
                     /*addMessage(FacesMessage.SEVERITY_ERROR, "Información", "Error al guardar los datos.");*/
@@ -700,6 +687,53 @@ public class CrudView implements Serializable {
                 }
             } else {
                 System.out.println("ACTUALIZAR EXÁMEN Y SU ID ES:" + String.valueOf(this.examenSeleccionado.getIdOrden()));
+                if (selectedCategorias.size() == 1) {
+                    //id orden para el where, idpersona, fecharegistro, fechaentregaResult,idexamen,idcategoriaexam
+                    //observacion,precioUnit
+                    System.out.println("DATOS PARA UPDATE EXAMEN");
+                    System.out.println("ID ORDEN: " + orden.getId());
+                    System.out.println("ID PERSONA: " + this.selectedPersonas.get(0).getId());
+                    orden.setIdpersona(this.selectedPersonas.get(0).getId());
+                    System.out.println("ID PERSONA: " + this.selectedPersonas.get(0).getId());
+                    System.out.println("ID EXAMEN" + this.examenSeleccionado.getId() + " Y CON LA CLASE EXAMEN" + examen.getId());
+                    examen.setId(this.examenSeleccionado.getId());
+                    orden.setFecharegistro(examen.getFechaRegistro());
+                    System.out.println("FECHA DE ENTREGARESULT" + examen.getFechaEntregaResult());
+                    orden.setFechaentregaResult(examen.getFechaEntregaResult());
+                    System.out.println("FECHA DE OBSERVACION" + examen.getObservaciones());
+                    if (orden.update() == 1) {
+                        //OBTENER NUEVO PRECIO PARA ACTUALIZAR TOTAL
+                        List<Float> examenesPrecioTemporal = new ArrayList<>();
+                        Conexion conn = new Conexion();
+                        conn.abrirConexion();
+                        ResultSet rs = conn.select("select \"precioUnit\" from examenes where idorden= " + orden.getId()
+                                + " and idexamen != " + this.examenSeleccionado.getId() + " ; ");
+                        while (rs.next()) {
+                            examenesPrecioTemporal.add(rs.getFloat("precioUnit"));
+                        }
+                        conn.cerrarConexion();
+                        for (int i = 0; i < examenesPrecioTemporal.size(); i++) {
+                            precio = precio + examenesPrecioTemporal.get(i);
+                        }
+                        examen.setIdcategoriaexam(this.selectedCategorias.get(0).getIdcategoria());
+                        examen.setPrecioUnit(precio);
+                        examen.setId(this.examenSeleccionado.getId());
+                        if (examen.updateExamenes() == 1) {
+                            orden.setTotal(precio);
+                            if (orden.actualizarPrecio() == 1) {
+                                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Examen actualizado"));
+                                this.selectedCategorias = new ArrayList<categoriaExamen>();
+                                this.selectedPersonas = new ArrayList<Personap>();
+                                this.selectedExamenes = new ArrayList<Examenp>();
+                                this.cargarExamenes();
+                            }
+
+                        }
+                    }
+                } else {
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Sólo puede actualizar el exámen seleccionado"));
+                }
 //            try {
 //                if (personaSeleccionada.updateX() == 1) {
 //                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Paciente actualizado"));
@@ -734,10 +768,12 @@ public class CrudView implements Serializable {
     }
 
     public void imprimirIdExamen(Examenp exa) {
+        this.orden = new ordenes();
         orden.setId(exa.getIdOrden());
         System.out.println("ID DE ORDEN: " + exa.getIdOrden());
         this.examenSeleccionado = exa;
         System.out.println("id orden:  " + this.examenSeleccionado.getIdOrden());
+        System.out.println("id examen:  " + this.examenSeleccionado.getId());
         this.cargarPacientesparaExa();
         //this.personaSeleccionada = this.personasE.get(0);
         //this.personaSeleccionada.setId(this.examenSeleccionado.getIdpersonaa());
@@ -767,7 +803,8 @@ public class CrudView implements Serializable {
             //REALIZAR SELECT PARA SABER CUANTOS EXAMENES CONTINE LA ORDEN Y GUARDAR EN LIMITE
             //SI LIMITE ES MAYOR A 0 SE PRESENTARA MENSAJE INDICANDO QUE SÓLO PUEDE ACTUALIZAR X EXAMENES
             this.selectedPersonas.add(temp);
-            System.out.println(temp.getCedula());
+//            System.out.println(temp.getCedula());
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Se modificará el exámen seleccionado"));
             conn.cerrarConexion();
         } catch (Exception ex) {
             Logger.getLogger(CrudView.class.getName()).log(Level.SEVERE, null, ex);

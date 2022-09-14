@@ -211,11 +211,11 @@ public class Examenp {
     
     public long updateExamenes() throws Exception {
         System.out.println("en UPDATE DE Examenp");
-        String sentence = "UPDATE public.examenes SET nombreExamen = '"+nombreExamen+"' ,idpersona= '"+idpersona+"', categoriaexamen= '"+categoriaexamen+"', Observaciones= '"+
-                Observaciones+"', Precio= '"+Precio+"' WHERE idexamenes= "+id+" ;";       
+        String sentence = "UPDATE public.examenes SET idcategoriaexam= "+idcategoriaexam+", observacion= '"+
+                Observaciones+"', \"precioUnit\"= "+precioUnit+" WHERE idexamen= "+id+" ;";       
         System.out.println(sentence);
         Conexion conexion = new Conexion();
-        return conexion.insertarPerson(sentence);
+        return conexion.insertarExamenes(sentence);
     }
     
     public List<Examenp> selectExamenes() throws Exception{

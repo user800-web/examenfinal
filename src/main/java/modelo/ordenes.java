@@ -92,23 +92,7 @@ public class ordenes {
         String sentence = "INSERT INTO public.orden_examen( " +
 "	idpersona, totalexamenes, fecharegistro, \"fechaentregaResult\", total) " +
 "	VALUES ( '"+idpersona+"', "+totalexamenes+", '"+fecharegistro+"', '"+fechaentregaResult+"', "+total+" ) returning id;";
-        System.out.println(sentence);        
-//        envio = conexion.insertarOrden(sentence);
-//        String comprobacion = "select id from orden_examen where idpersona= "+idpersona+" and totalexamenes= "+totalexamenes+
-//                "and fecharegistro= '"+fecharegistro+"' and \"fechaentregaResult\"='"+fechaentregaResult+"' and total= "+total+" ";
-
-//String sentence = "INSERT INTO public.orden_examen( " +
-//"	idpersona, totalexamenes, fecharegistro, \"fechaentregaResult\", total) " +
-//"	VALUES ( ?, ?, '"+fecharegistro+"', '"+fechaentregaResult+"', ? ) ";
-//PreparedStatement ps = conexion.connecion.prepareStatement(sentence, PreparedStatement.RETURN_GENERATED_KEYS);
-//        ps.setInt(1, idpersona);
-//        ps.setInt(2, totalexamenes);
-//        ps.setFloat(3, total);
-//        ps.executeUpdate();
-//        ResultSet rs = ps.getGeneratedKeys();
-//        while(rs.next()){
-//            envio= rs.getInt(1);
-//        }
+        System.out.println(sentence);
         Statement statement = conexion.connecion.createStatement();
         statement.executeUpdate(sentence, Statement.RETURN_GENERATED_KEYS);
         ResultSet rs = statement.getGeneratedKeys();
@@ -117,5 +101,18 @@ public class ordenes {
         }
         conexion.cerrarConexion();
         return envio;
+    }
+    public long update() throws Exception{
+        String sentence = "UPDATE public.orden_examen SET idpersona= "+idpersona+", fecharegistro= '"+fecharegistro+
+                "', \"fechaentregaResult\"= '"+fechaentregaResult +"' WHERE id= "+id+" ;";       
+        System.out.println(sentence);
+        Conexion conexion = new Conexion();
+        return conexion.insertarOrden(sentence);
+    }
+    public long actualizarPrecio() throws Exception{
+        String sentence = "UPDATE public.orden_examen SET total= "+total+" WHERE id= "+id+" ;";       
+        System.out.println(sentence);
+        Conexion conexion = new Conexion();
+        return conexion.insertarOrden(sentence);
     }
 }
