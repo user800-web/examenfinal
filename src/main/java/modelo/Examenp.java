@@ -206,7 +206,7 @@ public class Examenp {
         String sentence = "DELETE FROM public.examenes WHERE idorden= "+ido+" ;";
         System.out.println(sentence);
         Conexion conexion = new Conexion();
-        return conexion.deletePerson(sentence);
+        return conexion.deleteExamenes(sentence);
     }
     
     public long updateExamenes() throws Exception {

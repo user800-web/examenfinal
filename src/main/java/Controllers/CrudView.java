@@ -527,15 +527,19 @@ public class CrudView implements Serializable {
         System.out.println("ID DE ORDEN: " + orden.getId());
         System.out.println("id examen:  " + this.examenSeleccionado.getId());
         try {
-                if (this.examenSeleccionado.deleteExamenes(this.orden.getId()) == 1) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Exámen eliminado"));
+            long eliminacion=this.examenSeleccionado.deleteExamenes(this.orden.getId());
+            System.out.println("eliminacion: "+eliminacion);
+                if (eliminacion == 1) {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Examen eliminado"));
                     System.out.println("ENTRO A DELETE");
                     this.cargarExamenes();
+                    this.selectedExamenes= new ArrayList<>();
                     PrimeFaces.current().ajax().update("form:messages", "form:dt-products");
                     return "confirmation";
                 } else {
+                    this.selectedExamenes= new ArrayList<>();
                     System.out.println("NO ENTRO A DELETE desde if");
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Paciente no eliminado"));
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Examen no eliminado"));
                     return "error";
                 }
         } catch (Exception e) {
