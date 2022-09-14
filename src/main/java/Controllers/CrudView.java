@@ -527,9 +527,9 @@ public class CrudView implements Serializable {
         System.out.println("ID DE ORDEN: " + orden.getId());
         System.out.println("id examen:  " + this.examenSeleccionado.getId());
         try {
-            long eliminacion=this.examenSeleccionado.deleteExamenes(this.orden.getId());
+            long eliminacion=this.examenSeleccionado.deleteExamenes(this.examenSeleccionado.getId());
             System.out.println("eliminacion: "+eliminacion);
-                if (eliminacion == 1) {
+                if (eliminacion >0) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Examen eliminado"));
                     System.out.println("ENTRO A DELETE");
                     this.cargarExamenes();
@@ -672,6 +672,7 @@ public class CrudView implements Serializable {
                                 this.selectedCategorias = new ArrayList<categoriaExamen>();
                                 this.selectedPersonas = new ArrayList<Personap>();
                                 this.selectedExamenes = new ArrayList<Examenp>();
+                                this.examen= new Examenp();
                                 this.cargarExamenes();
                             } else {
                                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Exámenes agregados"));

@@ -202,8 +202,8 @@ public class Examenp {
         return conexion.insertarExamenes(sentence);
     }
     
-    public long deleteExamenes(int ido) throws Exception {
-        String sentence = "DELETE FROM public.examenes WHERE idorden= "+ido+" ;";
+    public long deleteExamenes(int idE) throws Exception {
+        String sentence = "DELETE FROM public.examenes WHERE idexamen= "+idE+" ;";
         System.out.println(sentence);
         Conexion conexion = new Conexion();
         return conexion.deleteExamenes(sentence);
