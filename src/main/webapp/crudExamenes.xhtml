@@ -134,7 +134,7 @@
 
                         <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash" process="@this"
                                          oncomplete="PF('deleteProductDialog').show()">
-                            <f:setPropertyActionListener value="#{examen}" target="#{crudView.imprimirIdExamen(examen)}" />
+                            <f:setPropertyActionListener value="#{examen}" target="#{crudView.examenSeleccionado}" />
                         </p:commandButton>
                     </p:column>
                 </p:dataTable>

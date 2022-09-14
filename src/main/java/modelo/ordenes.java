@@ -115,4 +115,10 @@ public class ordenes {
         Conexion conexion = new Conexion();
         return conexion.insertarOrden(sentence);
     }
+    public long eliminar() throws Exception{
+        String sentence = "DELETE FROM public.orden_examen WHERE id= "+id+" ;";       
+        System.out.println(sentence);
+        Conexion conexion = new Conexion();
+        return conexion.insertarOrden(sentence);
+    }
 }

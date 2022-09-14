@@ -522,18 +522,22 @@ public class CrudView implements Serializable {
 
     public String deleteExamen() {
         System.out.println("ENTRO A deleteExamen");
+        this.orden = new ordenes();
+        orden.setId(this.examenSeleccionado.getIdOrden());
+        System.out.println("ID DE ORDEN: " + orden.getId());
+        System.out.println("id examen:  " + this.examenSeleccionado.getId());
         try {
-            if (examenSeleccionado.deleteExamenes(this.examenSeleccionado.getId()) == 1) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Exámen eliminado"));
-                System.out.println("ENTRO A DELETE");
-                this.cargarExamenes();
-                PrimeFaces.current().ajax().update("form:messages", "form:dt-products");
-                return "confirmation";
-            } else {
-                System.out.println("NO ENTRO A DELETE desde if");
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Paciente no eliminado"));
-                return "error";
-            }
+                if (this.examenSeleccionado.deleteExamenes(this.orden.getId()) == 1) {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Exámen eliminado"));
+                    System.out.println("ENTRO A DELETE");
+                    this.cargarExamenes();
+                    PrimeFaces.current().ajax().update("form:messages", "form:dt-products");
+                    return "confirmation";
+                } else {
+                    System.out.println("NO ENTRO A DELETE desde if");
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Paciente no eliminado"));
+                    return "error";
+                }
         } catch (Exception e) {
             System.out.println("NO ENTRO A DELETE desde try catch" + e.toString());
             /*addMessage(FacesMessage.SEVERITY_ERROR, "Información", "Error al guardar los datos.");*/
