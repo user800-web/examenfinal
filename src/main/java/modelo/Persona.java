@@ -5,10 +5,15 @@
  */
 package modelo;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+
 /**
  *
  * @author kevin
  */
+@ManagedBean(name = "persona")
+@ViewScoped
 public class Persona {
     private int id = 0;
     String nombres = "";
