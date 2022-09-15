@@ -9,49 +9,44 @@
     <h:head>
         <title>Examenes</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous"/><!-- comment -->
-
-        <link href="Recursosappweb/css/estilocrudpersona.css" rel="stylesheet" type="text/css"/>
+        <link href="Recursosappweb/css/registro.css" rel="stylesheet" type="text/css"/>
     </h:head>
     <h:body>
         <h:form id="form">
-            <div class="px-4">
-                <!-- DATOS DEL USUARIO -->
-                <div class="field">
-                    <p:outputLabel for="cedula">Cédula</p:outputLabel>
-                    <p:inputText id="cedula" value="#{crudView.personaExamen.cedula}" disabled="true" />
-                </div>
-                <div class="field">
-                    <p:outputLabel for="name">Nombres</p:outputLabel>
-                    <p:inputText id="name" value="#{crudView.personaExamen.nombres} #{crudView.personaExamen.apellidos}" disabled="true" />
-                </div>
-                <div class="field">
-                    <p:outputLabel>Exámenes a realizar</p:outputLabel><br/>
-                    <ui:repeat var="item" varStatus="status" value="#{crudView.selectedCategorias}">
-                        #{status.index+1}. #{item.tipoExa} - #{item.precio}<br/>
-                    </ui:repeat><br/>
-                </div>
-                <div class="field">
-                    <p:outputLabel for="fechaInicia">Fecha de exámen</p:outputLabel>
-                    <p:inputText id="fechaInicia" value="#{crudView.examen.fechaRegistro}" />
-                </div>
-                <div class="field">
-                    <p:outputLabel for="fechaEntrega">Fecha de entrega</p:outputLabel>
-                    <p:inputText id="fechaEntrega" value="#{crudView.examen.fechaEntregaResult}" />
-                </div>
-                <div class="field">
-                    <p:outputLabel for="observaciones">Observaciones</p:outputLabel>
-                    <p:inputText id="observaciones" value="#{crudView.examen.observaciones}" />
-                </div>
-                <div class="field">
-                    <p:outputLabel for="total">Total</p:outputLabel>
-                    <p:inputText id="total" value="#{crudView.precio}" disabled="true"/>
-                </div>
+            <div class="formulario">
+                <p:outputPanel id="manage-datos-registro" class="ui-fluid">
+                    <!-- DATOS DEL USUARIO (nombres, apellido, correo, contraseña, cédula -->
+                        <div class="field">
+                            <p:outputLabel for="cedula">Cédula</p:outputLabel>
+                            <p:inputText id="cedula" value="#{persona.cedula}" required="true" />
+                        </div>
+                        <div class="field">
+                            <p:outputLabel for="name">Nombres</p:outputLabel>
+                            <p:inputText id="name" value="#{persona.nombres}" required="true" />
+                        </div>
+                        <div class="field">
+                            <p:outputLabel for="apellidos">Apelidos</p:outputLabel>
+                            <p:inputText id="apellidos" value="#{persona.apellidos}" required="true" />
+                        </div>
+                        <div class="field">
+                            <p:outputLabel for="email">Correo electrónico</p:outputLabel>
+                            <p:inputText id="email" value="#{persona.correo}" required="true" />
+                        </div>
+                        <div class="field">
+                            <p:outputLabel for="clave">Clave</p:outputLabel>
+                            <p:inputText id="clave" value="#{persona.clave}" required="true" />
+                        </div>
+                        <div class="field">
+                            <p:commandButton class=" w-100 btn btn-success" icon="pi pi-chevron-right"
+                                             value="Registrar" action="#{persona.registro()}" />
+                            <p:button class="w-100 btn btn-primary" value="Regresar" outcome="iniciarSesion" />
+                            <!--h:commandLink  action="pantallaUsuario.xhtml">
+                                <br/>
+                                <p:button class=" w-100 btn btn-primary" icon="pi pi-chevron-left" value="Regresar"/>
+                            </h:commandLink-->
+                        </div>
+                </p:outputPanel>
             </div>
-            <f:facet name="footer">
-                <p:commandButton value="Guardar" icon="pi pi-check" action="#{crudView.guardarExamen()}"
-                                 update="manage-configurar-examen" process="manage-configurar-examen @this" 
-                                 onclick="PF('confExa').hide()"/>
-            </f:facet>
         </h:form>            
     </h:body>
 </html>
