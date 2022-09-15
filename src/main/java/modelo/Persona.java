@@ -36,6 +36,12 @@ public class Persona {
 
     public Persona() {
     }
+    public Persona(int id, String cedula, String nombres, String apellidos){
+        this.id=id;
+        this.cedula= cedula;
+        this.nombres=nombres;
+        this.apellidos=apellidos;
+    }
 
     public int getId() {
         return id;
