@@ -26,26 +26,7 @@ public class Conexion {
     private boolean estado;
     
     public Conexion() throws Exception {
-//        connecion = null;
-//        statement = null;
-//        try{
-//        Class.forName("org.postgresql.Driver");
-//        System.out.println("SE encontro driver");
-//        }catch(Exception e){
-//            System.out.println("No encontro driver");
-//        }
-//        try{
-//            String url = "jdbc:postgresql://localhost:5432/laboratorioappweb";
-//            connecion = DriverManager.getConnection(url, "postgres", "admin");
-//            
-//            
-//        }catch(Exception ee){
-//            System.out.println("Error en CONSTRUCTOR CONEXION"+ee.toString());
-//        }
-//        if (connecion != null) {
-//            statement = connecion.createStatement();
-//            System.out.println("Conexión a base de datos  ... Ok");
-//        }
+        
     }
     
     public Connection getConnecion() {
@@ -55,7 +36,7 @@ public class Conexion {
             System.out.println("No encontro driver");
         }
         try{
-            String url = "jdbc:postgresql://localhost:5432/laboratorioappweb";
+            String url = "jdbc:postgresql://localhost:5432/examenfinal";
             connecion = DriverManager.getConnection(url, "postgres", "admin");
             
             
@@ -69,7 +50,7 @@ public class Conexion {
             if (connecion == null || !(connecion.isClosed())) {
                 //System.out.println(mensaje+ " si abre la conexion");
                 Class.forName("org.postgresql.Driver"); 
-                String url = "jdbc:postgresql://localhost:5432/laboratorioappweb";
+                String url = "jdbc:postgresql://localhost:5432/examenfinal";
             connecion = DriverManager.getConnection(url, "postgres", "admin");
                 statement = connecion.createStatement();
                 estado = true;
@@ -89,9 +70,9 @@ public class Conexion {
         return resultSet;
     }
     
-    public long insertarPerson(String sentence) throws Exception {
+    public long insertar(String sentence) throws Exception {
         int retorno = -1;
-        System.out.println("EN INSERTAR PERSONA/ ACTUALIZAR");
+        System.out.println("EN INSERTAR");
         try{
             if (abrirConexion()) {
                 retorno = statement.executeUpdate(sentence);
@@ -104,39 +85,9 @@ public class Conexion {
         return retorno;
     }
     
-    public long insertarOrden(String sentence) throws Exception {
+    public long delete(String sentence) throws Exception {
         int retorno = -1;
-        System.out.println("EN INSERTAR ORDEN");
-        try{
-            if (abrirConexion()) {
-                retorno = statement.executeUpdate(sentence);
-            }        
-        }catch(Exception ee){
-            System.out.println("NO INSERTO"+ee.toString());
-        } finally {
-            cerrarConexion();
-        }
-        return retorno;
-    }
-    
-    public long insertarExamenes(String sentence) throws Exception {
-        int retorno = -1;
-        System.out.println("EN INSERTAR EXAMEN/ ACTUALIZAR");
-        try{
-            if (abrirConexion()) {
-                retorno = statement.executeUpdate(sentence);
-            }        
-        }catch(Exception ee){
-            System.out.println("NO SE INSERTO"+ee.toString());
-        } finally {
-            cerrarConexion();
-        }
-        return retorno;
-    }
-    
-    public long deleteExamenes(String sentence) throws Exception {
-        int retorno = -1;
-        System.out.println("EN BORRAR EXAMEN");
+        System.out.println("EN BORRAR");
         try{
             if (abrirConexion()) {
                 retorno = statement.executeUpdate(sentence);
@@ -148,22 +99,6 @@ public class Conexion {
         }
         return retorno;
     }
-    
-    public long deletePerson(String sentence) throws Exception {
-        int retorno = -1;
-        System.out.println("EN DELETE PERSONA");
-        try{
-            if (abrirConexion()) {
-                retorno = statement.executeUpdate(sentence);
-            }        
-        }catch(Exception ee){
-            System.out.println("NO elimino"+ee.toString());
-        } finally {
-            cerrarConexion();
-        }
-        return retorno;
-    }
-    
     public int ejecutar(String sql) {
         int retorno = -1;
         try {
@@ -182,32 +117,6 @@ public class Conexion {
         }
         return retorno;
     }
-    
-    public String obtenerValor(String consulta, int indx) {
-        String valor = "";
-        try {
-            if (abrirConexion()) {
-                statement = connecion.createStatement();
-                resultSet = statement.executeQuery(consulta);
-                if (resultSet.next()) {
-                    valor = resultSet.getString(indx);
-                }
-                cerrarConexion();
-                mensaje = "Se insertó correctamente : ";
-                tipoMensaje = FacesMessage.SEVERITY_INFO;
-            }
-        } catch (SQLException exc) {
-            System.out.println(consulta);
-            mensaje = exc.getMessage();
-            tipoMensaje = FacesMessage.SEVERITY_FATAL;
-            System.out.println(mensaje);
-
-        } finally {
-            cerrarConexion();
-        }
-        return valor;
-    }
-    
     public void cerrarConexion() {
         try {
             if (connecion != null && !connecion.isClosed()) {

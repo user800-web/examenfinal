@@ -48,8 +48,9 @@
                     <h:panelGroup>
                         <h:inputSecret class="form-control" id="contrasena" required="false" value="#{personaMB.contraseña}"/>
                         <p:outputLabel for="contrasena" value="Clave"/>
-                        <h:graphicImage id="show" url="Imagenes/show (1).png" width="35px" style="vertical-align:middle;" onmouseover="changeCursor(this, 'pointer');" onmouseout="changeCursor(this, 'default');" onclick="showPassword(true);" />
-                        <h:graphicImage id="hide" url="Imagenes/hidden (1).png" width="35px" style="display:none;vertical-align:middle;" onmouseover="changeCursor(this, 'pointer');" onmouseout="changeCursor(this, 'default');" onclick="showPassword(false);" />
+                        <h:graphicImage id="show" url="Imagenes/show.png" width="35px" style="vertical-align:middle;" onmouseover="changeCursor(this, 'pointer');" onmouseout="changeCursor(this, 'default');" onclick="showPassword(true);" />
+
+                        <h:graphicImage id="hide" url="Imagenes/hidden.png" width="35px" style="display:none;vertical-align:middle;" onmouseover="changeCursor(this, 'pointer');" onmouseout="changeCursor(this, 'default');" onclick="showPassword(false);" />
                     </h:panelGroup>
                 </div>
                 <br/>
@@ -58,7 +59,7 @@
                     <br/>
                     <h:commandLink value="#{pantallaGeneral.xhtml}" action="pantallaGeneral.xhtml">
                         <br/>
-                        <p:button class=" w-100 btn btn-primary" icon="pi pi-chevron-left" value="Volver a la principal"/>
+                        <p:button class=" w-100 btn btn-primary" icon="pi pi-chevron-left" value="Iniciar registro"/>
                     </h:commandLink>
                 </div>
             </main>

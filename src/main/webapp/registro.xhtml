@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Examenes</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous"/><!-- comment -->
+
+        <link href="Recursosappweb/css/estilocrudpersona.css" rel="stylesheet" type="text/css"/>
+    </h:head>
+    <h:body>
+        <h:form id="form">
+            <div class="px-4">
+                <!-- DATOS DEL USUARIO -->
+                <div class="field">
+                    <p:outputLabel for="cedula">Cédula</p:outputLabel>
+                    <p:inputText id="cedula" value="#{crudView.personaExamen.cedula}" disabled="true" />
+                </div>
+                <div class="field">
+                    <p:outputLabel for="name">Nombres</p:outputLabel>
+                    <p:inputText id="name" value="#{crudView.personaExamen.nombres} #{crudView.personaExamen.apellidos}" disabled="true" />
+                </div>
+                <div class="field">
+                    <p:outputLabel>Exámenes a realizar</p:outputLabel><br/>
+                    <ui:repeat var="item" varStatus="status" value="#{crudView.selectedCategorias}">
+                        #{status.index+1}. #{item.tipoExa} - #{item.precio}<br/>
+                    </ui:repeat><br/>
+                </div>
+                <div class="field">
+                    <p:outputLabel for="fechaInicia">Fecha de exámen</p:outputLabel>
+                    <p:inputText id="fechaInicia" value="#{crudView.examen.fechaRegistro}" />
+                </div>
+                <div class="field">
+                    <p:outputLabel for="fechaEntrega">Fecha de entrega</p:outputLabel>
+                    <p:inputText id="fechaEntrega" value="#{crudView.examen.fechaEntregaResult}" />
+                </div>
+                <div class="field">
+                    <p:outputLabel for="observaciones">Observaciones</p:outputLabel>
+                    <p:inputText id="observaciones" value="#{crudView.examen.observaciones}" />
+                </div>
+                <div class="field">
+                    <p:outputLabel for="total">Total</p:outputLabel>
+                    <p:inputText id="total" value="#{crudView.precio}" disabled="true"/>
+                </div>
+            </div>
+            <f:facet name="footer">
+                <p:commandButton value="Guardar" icon="pi pi-check" action="#{crudView.guardarExamen()}"
+                                 update="manage-configurar-examen" process="manage-configurar-examen @this" 
+                                 onclick="PF('confExa').hide()"/>
+            </f:facet>
+        </h:form>            
+    </h:body>
+</html>
